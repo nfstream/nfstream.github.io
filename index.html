@@ -50,7 +50,12 @@ my_dataframe.head()
   </section>
   <section class="lp-section">
     <div class="lp-center lp-section-container">
-            <div class="lp-col">
+      <div class="lp-col  lp-col-left">
+          <h2>Flexible and extensible</h2>
+          <p>Didn't find a specific flow feature? add a plugin to nfstream in few lines.</p>
+          <a href="{{ site.baseurl }}/docs/api#nfplugin" class="btn btn-blue fs-5 mb-3 mb-md-5">Learn More</a>
+      </div>
+                  <div class="lp-col">
 {% highlight python %}
 class ack_count(NFPlugin):
    def on_init(self, pkt):
@@ -68,11 +73,6 @@ streamer_awesome = NFStreamer(source='devil.pcap',
                               plugins=[ack_count()])
 
 {% endhighlight %}
-      </div>
-      <div class="lp-col  lp-col-left">
-          <h2>Flexible and extensible</h2>
-          <p>Didn't find a specific flow feature? add a plugin to nfstream in few lines.</p>
-          <a href="{{ site.baseurl }}/docs/api#nfplugin" class="btn btn-blue fs-5 mb-3 mb-md-5">Learn More</a>
       </div>
     </div>
   </section>
