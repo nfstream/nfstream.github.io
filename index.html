@@ -37,13 +37,11 @@ nav_exclude: true
       <div class="lp-col lp-col-left">
 {% highlight python %}
 from nfstream import NFStreamer, NFPlugin
-{% endhighlight %}
-{% highlight python %}
+
 my_online_streamer = NFStreamer(source="eth0")
 for flow in my_online_streamer:
    print(flow) # print it or whatever you want.
-{% endhighlight %}
-{% highlight python %}
+
 my_dataframe = NFStreamer(source="tor.pcap").to_pandas()
 my_dataframe.head()
 {% endhighlight %}
