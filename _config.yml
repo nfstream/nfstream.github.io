@@ -27,7 +27,7 @@ top_navigation_enabled: true
 is_new_release: true
 
 # Google Analytics Tracking Id
-ga_tracking: none
+ga_tracking: UA-162172644-1
 
 include:
   - _*_8h.html
