@@ -29,7 +29,7 @@ There are multiple ways to contact us. Please feel free to reach out for any iss
 
 Thank you for using nfstream! If you'd like to support us you can do it in various ways:
 
-- <script async defer src="https://buttons.github.io/buttons.js"></script><a class="github-button" href="https://github.com/aouinizied/nfstream" data-icon="octicon-star" data-show-count="true" aria-label="Star aouinizied/nfstream on GitHub">Star</a> Give us a star on GitHub, that helps ⭐⭐!
+- <script async defer src="https://buttons.github.io/buttons.js"></script><a class="github-button" href="https://github.com/aouinizied/nfstream" data-icon="octicon-star" data-show-count="true" aria-label="Star aouinizied/nfstream on GitHub">Star</a> Give us a star on GitHub.
 - <script async defer src="https://buttons.github.io/buttons.js"></script><a class="github-button" href="https://github.com/sponsors/aouinizied" data-icon="octicon-heart" aria-label="Sponsor @aouinizied on GitHub">Sponsor</a> Become a Sponsor.
 - Spread the word about nfstream in the social media, articles, web-sites or anywhere you can.
 
