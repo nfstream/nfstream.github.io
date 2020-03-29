@@ -1,0 +1,27 @@
+left_items:
+  - name: Docs
+    link: /docs/
+    external_link: false
+  - name: Live Notebook
+    link: https://mybinder.org/v2/gh/aouinizied/nfstream-tutorials/master?filepath=demo_notebook.ipynb
+    external_link: true
+  - name: API
+    link: /docs/api
+    external_link: false
+  - name: Community
+    link: /docs/community
+    external_link: false
+
+right_items:
+  - name: GitHub
+    tooltip: nfstream on GitHub
+    image: /resources/logo-github-invert.png
+    link: https://github.com/aouinizied/nfstream
+  - name: Twitter
+    tooltip: nfstream on Twitter
+    image: /resources/logo-twitter.png
+    link: https://twitter.com/nfstream
+  - name: Gitter
+    tooltip: nfstream on Gitter
+    image: /resources/logo-gitter.png
+    link: https://gitter.im/nfstream/community

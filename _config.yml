@@ -1,0 +1,39 @@
+title: nfstream
+email: nfstream.dev@gmail.com
+description: a flexible network data analysis framework
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://nfstream.github.io"
+twitter_username: aouinizied
+github_username:  aouinizied
+logo_source: /resources/logo_white.png
+logo_width: 180
+
+# Build settings
+markdown: kramdown
+remote_theme: aouinizied/just-the-docs
+plugins:
+  - jekyll-seo-tag
+  - jekyll-feed
+  - jekyll-remote-theme
+  - jekyll-sitemap
+
+# Enable or disable the site search
+search_enabled: true
+
+# Enable or disable top navigation panel
+top_navigation_enabled: true
+
+# nfstream specific variables
+is_new_release: true
+
+# Google Analytics Tracking Id
+ga_tracking: none
+
+include:
+  - _*_8h.html
+  - _*_8h_source.html
+  - _*_8h.js
+
+exclude:
+  - README.md
+

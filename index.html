@@ -1,1 +1,141 @@
-Hello World
+---
+title: nfstream - a flexible network data analysis framework.
+layout: generic-page
+nav_exclude: true
+---
+<div class="lp-container">
+  <header class="lp-header">
+    <div class="lp-center">
+      <h1 style="font-weight: bold">A Flexible Network Data Analysis Framework</h1>
+      <h2 style="padding-bottom: 30px">nfstream is a Python package providing fast, flexible, and expressive data structures
+        designed to make working with online or offline network data both easy and intuitive.</h2>
+      <a href="https://mybinder.org/v2/gh/aouinizied/nfstream-tutorials/master?filepath=demo_notebook.ipynb" class="btn btn-blue fs-5 mb-3 mb-md-5 mr-5">Live Notebook</a>
+      <a href="{{ site.baseurl }}/docs/" class="btn btn-blue fs-5 mb-3 mb-md-5">Get Started</a>
+    </div>
+  </header>
+  <section class="lp-section">
+    <div class="lp-center lp-section-container">
+      <div class="lp-col lp-col-left">
+        <h2>Identify hundreds of applications</h2>
+        <p>nfstream deep packet inspection engine is based on nDPI. It allows nfstream to perform <a href="http://people.ac.upc.edu/pbarlet/papers/ground-truth.pam2014.pdf">reliable</a> encrypted applications identification and metadata extraction.
+        </p>
+        <a href="{{ site.baseurl }}/docs/visibility" class="btn btn-blue fs-5 mb-3 mb-md-5">Learn More</a>
+      </div>
+      <div class="lp-col">
+        <img src="{{ site.baseurl }}/resources/apps.png" class="lp-image"/>
+      </div>
+    </div>
+  </section>
+  <section class="lp-section lp-section-invert">
+    <div class="lp-center lp-section-container">
+      <div class="lp-col">
+          <h2>Aggregate your packets into flows</h2>
+          <p>Dealing with a big pcap file and just want to aggregate it as network flows? nfstream make this path easier
+            in few lines. You can also obtained directly as a pandas Dataframe.</p>
+          <a href="{{ site.baseurl }}/docs/api#nfstreamer-the-export-layer" class="btn btn-blue fs-5 mb-3 mb-md-5">Learn More</a>
+      </div>  
+      <div class="lp-col lp-col-left">
+{% highlight python %}
+from nfstream import NFStreamer, NFPlugin
+{% endhighlight %}
+{% highlight python %}
+my_online_streamer = NFStreamer(source="eth0")
+for flow in my_online_streamer:
+   print(flow) # print it or whatever you want.
+{% endhighlight %}
+{% highlight python %}
+my_dataframe = NFStreamer(source="tor.pcap").to_pandas()
+my_dataframe.head()
+{% endhighlight %}
+      </div>
+    </div>
+  </section>
+  <section class="lp-section">
+    <div class="lp-center lp-section-container">
+            <div class="lp-col">
+{% highlight python %}
+class ack_count(NFPlugin):
+   def on_init(self, pkt):
+   """flow creation with the first packet"""
+      if pkt.tcpflags.ack == 1:
+         return 1
+      else:
+         return 0
+   def on_update(self, pkt, flow):
+   """flow update with each packet belonging to the flow"""
+      if pkt.tcpflags.ack == 1:
+         flow.ack_count += 1
+
+streamer_awesome = NFStreamer(source='devil.pcap',
+                              plugins=[ack_count()])
+
+{% endhighlight %}
+      </div>
+      <div class="lp-col  lp-col-left">
+          <h2>Flexible and extensible</h2>
+          <p>Didn't find a specific flow feature? add a plugin to nfstream in few lines.</p>
+          <a href="{{ site.baseurl }}/docs/api#nfplugin" class="btn btn-blue fs-5 mb-3 mb-md-5">Learn More</a>
+      </div>
+    </div>
+  </section>
+    <section class="lp-section lp-section-invert">
+    <div class="lp-center lp-section-container">
+      <div class="lp-col">
+        <h2>Machine learning oriented</h2>
+        <p>Add your machine learning trained model as an NFPlugin in few lines.
+        </p>
+        <a href="{{ site.baseurl }}/docs/#start-your-ml-powered-streamer" class="btn btn-blue fs-5 mb-3 mb-md-5">Learn More</a>
+      </div>
+      <div class="lp-col  lp-col-left">
+        <img src="{{ site.baseurl }}/resources/mla.png" class="lp-image">
+      </div>
+    </div>
+  </section>
+  <section class="lp-section">
+    <div class="lp-center lp-section-container">
+      <div class="lp-col  lp-col-left">
+        <h2>Multiplatform support</h2>
+        <p>nfstream is currently supported on MacOS, Linux and FreeBSD.
+            You can install pre-built wheels for each platform using pip or build it from source. Windows support is
+            under development.
+        </p>
+        <a href="{{ site.baseurl }}/docs/installation" class="btn btn-blue fs-5 mb-3 mb-md-5">View Installation Guide</a>
+      </div>
+      <div class="lp-col">
+        <img src="{{ site.baseurl }}/resources/platforms.png" class="lp-image">
+      </div>
+    </div>
+  </section>
+  <footer class="lp-footer">
+    <div class="lp-footer-section lp-footer-grid">
+      <div>
+        <h3>Docs</h3>
+        <ul>
+            <li><a href="{{ site.baseurl }}/docs/#usage-examples" class="lp-footer-item">Usage Examples</a></li>
+          <li><a href="{{ site.baseurl }}/docs/installation" class="lp-footer-item">Installation Guide</a></li>
+          <li><a href="{{ site.baseurl }}/docs/api" class="lp-footer-item">API Documentation</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Community</h3>
+        <ul>
+          <li><a target="_blank" href="https://github.com/aouinizied/nfstream" class="lp-footer-item">GitHub</a></li>
+          <li><a target="_blank" href="https://gitter.im/nfstream/community" class="lp-footer-item">Gitter</a></li>
+          <li><a href="{{ site.baseurl }}/docs/community#contribute" class="lp-footer-item">Contribute</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>More</h3>
+        <ul>
+          <li><a href="{{ site.baseurl }}/docs/releases" class="lp-footer-item">Releases</a></li>
+          <li><a href="{{ site.baseurl }}/docs/license" class="lp-footer-item">License</a></li>
+          <li><a href="https://github.com/nfstream/nfstream.github.io" class="lp-footer-item">Website Repository</a></li>
+        </ul>
+      </div>  
+    </div>
+    <div class="lp-footer-section lp-footer-copyright">
+      <img src="{{ site.baseurl }}{{ site.logo_source }}" width="{{ site.logo_width }}" height="57">
+      <p>Copyright © {{ site.time | date: '%Y' }} {{ site.github_username }}</p>
+    </div>
+  </footer>
+</div>
