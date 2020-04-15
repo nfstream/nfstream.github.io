@@ -182,25 +182,30 @@ my_capture_streamer = NFStreamer(source="facebook.pcap", # or live interface
                                  plugins=(),
                                  dissect=True,
                                  max_tcp_dissections=10,
-                                 max_udp_dissections=16)
+                                 max_udp_dissections=16,
+                                 statistics=False,
+                                 account_ip_padding_size=False
+)
 
 """
 NFStreamer Parameters:
-        source [default= None]:            Source of packets.
-                                           Can be live_interface_name or pcap_file_path.
-        snaplen [default= 65535]:          Packet capture length.
-        idle_timeout [default= 30]:        Flows that are inactive for more than this value in 
-                                           seconds will be exported.
-        active_timeout [default= 300]:     Flows that are active for more than this value in 
-                                           seconds will be exported.
-        plugins [default= ()]:             Set of user defined NFPlugins.
-        dissect [default= True]:           Enable nDPI deep packet inspection library for 
-                                           Layer 7 visibility.
-        max_tcp_dissections [default= 10]: Maximum per flow TCP packets to dissect
-                                           (ignored when dissect=False).
+        source [default= None]:                   Source of packets.
+                                                  Can be live_interface_name or pcap_file_path.
+        snaplen [default= 65535]:                 Packet capture length.
+        idle_timeout [default= 30]:               Flows that are inactive for more than this value in 
+                                                  seconds will be exported.
+        active_timeout [default= 300]:            Flows that are active for more than this value in 
+                                                  seconds will be exported.
+        plugins [default= ()]:                    Set of user defined NFPlugins.
+        dissect [default= True]:                  Enable nDPI deep packet inspection library for 
+                                                  Layer 7 visibility.
+        max_tcp_dissections [default= 10]:        Maximum per flow TCP packets to dissect
+                                                  (ignored when dissect=False).
 
-        max_udp_dissections [default= 16]: Maximum per flow UDP packets to dissect 
-                                           (ignored when dissect=False).
+        max_udp_dissections [default= 16]:        Maximum per flow UDP packets to dissect 
+                                                  (ignored when dissect=False).
+        statistics [default= False]:              Enable statistical flow features extraction.
+        account_ip_padding_size [default= False]: Enable Ethernet padding accounting when reporting IP sizes. 
 """
 ```
 

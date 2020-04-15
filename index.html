@@ -32,7 +32,7 @@ nav_exclude: true
       <div class="lp-col">
           <h2>Aggregate your packets into flows</h2>
           <p>Dealing with a big pcap file and just want to aggregate it as network flows? nfstream make this path easier
-            in few lines. You can also obtained directly as a pandas Dataframe.</p>
+            in few lines. nfstream extracts +90 flow features and can convert it directly to a pandas Dataframe.</p>
           <a href="{{ site.baseurl }}/docs/api#nfstreamer-the-export-layer" class="btn btn-blue fs-5 mb-3 mb-md-5">Learn More</a>
       </div>  
       <div class="lp-col lp-col-left">
@@ -43,7 +43,7 @@ my_online_streamer = NFStreamer(source="eth0")
 for flow in my_online_streamer:
    print(flow) # print it or whatever you want.
 
-my_dataframe = NFStreamer(source="tor.pcap").to_pandas()
+my_dataframe = NFStreamer(source="tor.pcap", statistics=True).to_pandas()
 my_dataframe.head()
 {% endhighlight %}
       </div>
