@@ -15,9 +15,18 @@ This page contains nfstream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
-## Latest Official Release - v3.2.2 
+## Latest Official Release - v4.0.0 
 
-Release date: 2020-02-29 {% include new-release.html %}
+Release date: 2020-04-15 {% include new-release.html %}
+
+* Documentation on: https://nfstream.github.io/
+* 90+ flow statistical features extraction.
+* nDPI version update.
+* ZMQ improvements.
+
+## v3.2.2 
+
+Release date: 2020-02-29
 
 * Add to_pandas method.
 * Live demo using binder
