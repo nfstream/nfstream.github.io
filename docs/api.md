@@ -142,9 +142,15 @@ class NFPlugin(object):
 NFEntry is built using a set of core NFPlugins and extensible using user defined NFPlugins. The core 
 implemented non volatile NFPlugins output construct the **NFEntry** exposed by NFCache.
 
+#### Core Features
+
 | `id` | `int`  | Flow identifier |
-| `first_seen` | `int`  | First packet timestamp in milliseconds |
-| `last_seen` | `int`  | Last packet timestamp in milliseconds |
+| `bidirectional_first_seen_ms` | `float`  | Timestamp in milliseconds on first flow bidirectional packet |
+| `bidirectional_last_seen_ms` | `float`  | Timestamp in milliseconds on last flow bidirectional packet  |
+| `src2dst_first_seen_ms` | `float`  | Timestamp in milliseconds on first flow src2dst packet |
+| `src2dst_last_seen_ms` | `float`  | Timestamp in milliseconds on last flow src2dst packet  |
+| `dst2src_first_seen_ms` | `float`  | Timestamp in milliseconds on first flow dst2src packet |
+| `dst2src_last_seen_ms` | `float`  | Timestamp in milliseconds on last flow dst2src packet  |
 | `version` | `int`  | IP version |
 | `src_port` | `int`  | Transport layer source port |
 | `dst_port` | `int`  | Transport layer destination port |
@@ -154,22 +160,94 @@ implemented non volatile NFPlugins output construct the **NFEntry** exposed by N
 | `dst_ip` | `str`  | Destination IP address string representation |
 | `ip_src` | `int`  | Source IP address int value [volatile] |
 | `ip_dst` | `int`  | Destination IP address int value [volatile] |
-| `total_packets` | `int`  | Flow packets accumulator |
-| `total_bytes` | `int`  | Flow bytes (full packet length) accumulator |
-| `duration` | `int`  | Flow duration in milliseconds |
-| `src2dst_packets` | `int`  | Flow packets accumulator (source->destination) |
-| `src2dst_bytes` | `int`  | Flow bytes (full packet length) accumulator (source->destination) |
-| `dst2src_packets` | `int`  | Flow packets accumulator (destination->source) |
-| `dst2src_bytes` | `int`  | Flow bytes (full packet length) accumulator (destination->source).
+| `bidirectional_packets` | `int`  | Flow bidirectional packets accumulator |
+| `bidirectional_raw_bytes` | `int`  | Flow bidirectional raw bytes accumulator |
+| `bidirectional_ip_bytes` | `int`  | Flow bidirectional IP bytes accumulator |
+| `bidirectional_duration_ms` | `float`  | Flow bidirectional duration in milliseconds |
+| `src2dst_packets` | `int`  | Flow src2dst packets accumulator |
+| `src2dst_raw_bytes` | `int`  | Flow src2dst raw bytes accumulator |
+| `src2dst_ip_bytes` | `int`  | Flow src2dst IP bytes accumulator |
+| `src2dst_duration_ms` | `float`  | Flow src2dst duration in milliseconds |
+| `dst2src_packets` | `int`  | Flow dst2src packets accumulator |
+| `dst2src_raw_bytes` | `int`  | Flow dst2src raw bytes accumulator |
+| `dst2src_ip_bytes` | `int`  | Flow dst2src IP bytes accumulator |
+| `dst2src_duration_ms` | `float`  | Flow dst2src duration in milliseconds |
 | `expiration_id` | `int`  | Identifier of flow expiration trigger. Can be 0 for idle_timeout, 1 for active_timeout or negative for custom expiration |
-| `master_protocol` | `int`  | nDPI master protocol identifier |
-| `app_protocol` | `int`  | nDPI app protocol identifier |
-| `application_name` | `str`  | nDPI application name |
-| `category_name` | `str`  | nDPI application category name |
-| `client_info` | `str`  | Dissected client informations. Can be http_detected_os for HTTP, client_signature for SSH or client_requested_server_name for SSL |
-| `server_info` | `str`  | Dissected server informations. Can be host_server_name for HTTP or DNS, server_signature for SSH or server_names for SSL |
-| `j3a_client` | `str`  | J3A client fingerprint |
-| `j3a_server` | `str`  | J3A server fingerprint |
+
+#### Statistical Features
+
+| `bidirectional_min_raw_ps` | `int`  | Flow bidirectional minimum raw packet size |
+| `bidirectional_mean_raw_ps` | `float`  | Flow bidirectional mean raw packet size |
+| `bidirectional_stdev_raw_ps` | `float`  | Flow bidirectional raw packet size standard deviation (sample stddev) |
+| `bidirectional_max_raw_ps` | `int`  | Flow bidirectional maximum raw packet size |
+| `src2dst_min_raw_ps` | `int`  | Flow src2dst minimum raw packet size |
+| `src2dst_mean_raw_ps` | `float`  | Flow src2dst mean raw packet size |
+| `src2dst_stdev_raw_ps` | `float`  | Flow src2dst raw packet size standard deviation (sample stddev) |
+| `src2dst_max_raw_ps` | `int`  | Flow src2dst maximum raw packet size |
+| `dst2src_min_raw_ps` | `int`  | Flow dst2src minimum raw packet size |
+| `dst2src_mean_raw_ps` | `float`  | Flow dst2src mean raw packet size |
+| `dst2src_stdev_raw_ps` | `float`  | Flow dst2src raw packet size standard deviation (sample stddev) |
+| `dst2src_max_raw_ps` | `int`  | Flow dst2src maximum raw packet size |
+| `bidirectional_min_ip_ps` | `int`  | Flow bidirectional minimum ip packet size |
+| `bidirectional_mean_ip_ps` | `float`  | Flow bidirectional mean ip packet size |
+| `bidirectional_stdev_ip_ps` | `float`  | Flow bidirectional ip packet size standard deviation (sample stddev) |
+| `bidirectional_max_ip_ps` | `int`  | Flow bidirectional maximum ip packet size |
+| `src2dst_min_ip_ps` | `int`  | Flow src2dst minimum ip packet size |
+| `src2dst_mean_ip_ps` | `float`  | Flow src2dst mean ip packet size |
+| `src2dst_stdev_ip_ps` | `float`  | Flow src2dst ip packet size standard deviation (sample stddev) |
+| `src2dst_max_ip_ps` | `int`  | Flow src2dst maximum ip packet size |
+| `dst2src_min_ip_ps` | `int`  | Flow dst2src minimum ip packet size |
+| `dst2src_mean_ip_ps` | `float`  | Flow dst2src mean ip packet size |
+| `dst2src_stdev_ip_ps` | `float`  | Flow dst2src ip packet size standard deviation (sample stddev) |
+| `dst2src_max_ip_ps` | `int`  | Flow dst2src maximum ip packet size |
+| `bidirectional_min_piat_ms` | `float`  | Flow bidirectional minimum packet inter arrival time |
+| `bidirectional_mean_piat_ms` | `float`  | Flow bidirectional mean packet inter arrival time |
+| `bidirectional_stdev_piat_ms` | `float`  | Flow bidirectional packet inter arrival time standard deviation (sample stddev) |
+| `bidirectional_max_piat_ms` | `float`  | Flow bidirectional maximum packet inter arrival time |
+| `src2dst_min_piat_ms` | `float`  | Flow src2dst minimum packet inter arrival time |
+| `src2dst_mean_piat_ms` | `float`  | Flow src2dst mean packet inter arrival time |
+| `src2dst_stdev_piat_ms` | `float`  | Flow src2dst packet inter arrival time standard deviation (sample stddev) |
+| `src2dst_max_piat_ms` | `float`  | Flow src2dst maximum packet inter arrival time |
+| `dst2src_min_piat_ms` | `float`  | Flow dst2src minimum packet inter arrival time |
+| `dst2src_mean_piat_ms` | `float`  | Flow dst2src mean packet inter arrival time |
+| `dst2src_stdev_piat_ms` | `float`  | Flow dst2src packet inter arrival time standard deviation (sample stddev) |
+| `dst2src_max_piat_ms` | `float`  | Flow dst2src maximum packet inter arrival time |
+| `bidirectional_syn_packets` | `int`  | Flow bidirectional syn packet accumulators |
+| `bidirectional_cwr_packets` | `int`  | Flow bidirectional cwr packet accumulators |
+| `bidirectional_ece_packets` | `int`  | Flow bidirectional ece packet accumulators |
+| `bidirectional_urg_packets` | `int`  | Flow bidirectional urg packet accumulators |
+| `bidirectional_ack_packets` | `int`  | Flow bidirectional ack packet accumulators |
+| `bidirectional_psh_packets` | `int`  | Flow bidirectional psh packet accumulators |
+| `bidirectional_rst_packets` | `int`  | Flow bidirectional rst packet accumulators |
+| `bidirectional_fin_packets` | `int`  | Flow bidirectional fin packet accumulators |
+| `src2dst_syn_packets` | `int`  | Flow src2dst syn packet accumulators |
+| `src2dst_cwr_packets` | `int`  | Flow src2dst cwr packet accumulators |
+| `src2dst_ece_packets` | `int`  | Flow src2dst ece packet accumulators |
+| `src2dst_urg_packets` | `int`  | Flow src2dst urg packet accumulators |
+| `src2dst_ack_packets` | `int`  | Flow src2dst ack packet accumulators |
+| `src2dst_psh_packets` | `int`  | Flow src2dst psh packet accumulators |
+| `src2dst_rst_packets` | `int`  | Flow src2dst rst packet accumulators |
+| `src2dst_fin_packets` | `int`  | Flow src2dst fin packet accumulators |
+| `dst2src_syn_packets` | `int`  | Flow dst2src syn packet accumulators |
+| `dst2src_cwr_packets` | `int`  | Flow dst2src cwr packet accumulators |
+| `dst2src_ece_packets` | `int`  | Flow dst2src ece packet accumulators |
+| `dst2src_urg_packets` | `int`  | Flow dst2src urg packet accumulators |
+| `dst2src_ack_packets` | `int`  | Flow dst2src ack packet accumulators |
+| `dst2src_psh_packets` | `int`  | Flow dst2src psh packet accumulators |
+| `dst2src_rst_packets` | `int`  | Flow dst2src rst packet accumulators |
+| `dst2src_fin_packets` | `int`  | Flow dst2src fin packet accumulators |
+
+#### Application Identification Features
+
+| `master_protocol`           | `int`  | nDPI master protocol identifier |
+| `app_protocol`              | `int`  | nDPI app protocol identifier |
+| `application_name`          | `str`  | nDPI application name |
+| `category_name`             | `str`  | nDPI application category name |
+| `client_info`               | `str`  | Dissected client informations. Can be http_detected_os for HTTP, client_signature for SSH or client_requested_server_name for SSL |
+| `server_info`               | `str`  | Dissected server informations. Can be host_server_name for HTTP or DNS, server_signature for SSH or server_names for SSL |
+| `j3a_client`                | `str`  | J3A client fingerprint |
+| `j3a_server`                | `str`  | J3A server fingerprint |
+
 
 ## NFStreamer: The Export Layer
 
@@ -192,20 +270,21 @@ NFStreamer Parameters:
         source [default= None]:                   Source of packets.
                                                   Can be live_interface_name or pcap_file_path.
         snaplen [default= 65535]:                 Packet capture length.
-        idle_timeout [default= 30]:               Flows that are inactive for more than this value in 
-                                                  seconds will be exported.
-        active_timeout [default= 300]:            Flows that are active for more than this value in 
-                                                  seconds will be exported.
+        idle_timeout [default= 30]:               Flows that are inactive for more than this 
+                                                  value in seconds will be exported.
+        active_timeout [default= 300]:            Flows that are active for more than this
+                                                  value in seconds will be exported.
         plugins [default= ()]:                    Set of user defined NFPlugins.
-        dissect [default= True]:                  Enable nDPI deep packet inspection library for 
-                                                  Layer 7 visibility.
+        dissect [default= True]:                  Enable nDPI deep packet inspection library
+                                                  for Layer 7 visibility.
         max_tcp_dissections [default= 10]:        Maximum per flow TCP packets to dissect
                                                   (ignored when dissect=False).
 
         max_udp_dissections [default= 16]:        Maximum per flow UDP packets to dissect 
                                                   (ignored when dissect=False).
         statistics [default= False]:              Enable statistical flow features extraction.
-        account_ip_padding_size [default= False]: Enable Ethernet padding accounting when reporting IP sizes. 
+        account_ip_padding_size [default= False]: Enable Ethernet padding accounting when 
+                                                  reporting IP sizes. 
 """
 ```
 
