@@ -79,9 +79,9 @@ NFEntry(
 )
 ```
 
-### Statistical Features extraction
+### Statistical features extraction
 
-* nfstream also extracts [**60+ flow statistical features**][stat_feat]
+* nfstream also extracts **60+ flow statistical features**
 
 ```python
 from nfstream import NFStreamer
