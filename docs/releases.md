@@ -15,7 +15,7 @@ This page contains nfstream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
-## Latest Official Release - v4.0.0 
+## Latest Official Release - v4.0.1
 
 Release date: 2020-04-23 {% include new-release.html %}
 
