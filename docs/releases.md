@@ -17,7 +17,17 @@ This page contains nfstream release history
 
 ## Latest Official Release - v4.0.0 
 
-Release date: 2020-04-15 {% include new-release.html %}
+Release date: 2020-04-23 {% include new-release.html %}
+
+* Add to_json method.
+* Add enable_guess parameter.
+* Fix NFPlugins expiration handling.
+* Improve IPv6 extensions handling.
+* Maintenance update of nDPI.
+
+## v4.0.0 
+
+Release date: 2020-04-15
 
 * Documentation on: https://nfstream.github.io/
 * 90+ flow statistical features extraction.

@@ -262,7 +262,8 @@ my_capture_streamer = NFStreamer(source="facebook.pcap", # or live interface
                                  max_tcp_dissections=10,
                                  max_udp_dissections=16,
                                  statistics=False,
-                                 account_ip_padding_size=False
+                                 account_ip_padding_size=False,
+                                 enable_guess=True
 )
 
 """
@@ -284,7 +285,9 @@ NFStreamer Parameters:
                                                   (ignored when dissect=False).
         statistics [default= False]:              Enable statistical flow features extraction.
         account_ip_padding_size [default= False]: Enable Ethernet padding accounting when 
-                                                  reporting IP sizes. 
+                                                  reporting IP sizes.
+        enable_guess [default= True]:             Enable/Disable identification engine port
+                                                  guess heuristic.
 """
 ```
 
