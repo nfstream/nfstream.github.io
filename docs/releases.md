@@ -24,6 +24,7 @@ Release date: 2020-05-06 {% include new-release.html %}
 * Add BPF Filtering feature.
 * Add promisc option.
 * Add wheels for py36, py38, pypy3 on MacOS.
+* Maintenance update of nDPI (commit: 4148c5e065d32128eea17c0e228e372ad72eef82).
 
 ## v4.0.1
 
