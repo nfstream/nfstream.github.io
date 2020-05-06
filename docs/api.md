@@ -39,6 +39,11 @@ As packets may come from several observation points, reordering process is based
 While hardware timestamping provides a high accuracy up to 100 nanoseconds in case of the IEEE 1588 protocol, 
 it’s not supported by most of commodity NIC. nfstream is based on software timestamping which is widely used to outcome
  this lack providing milliseconds accuracy.
+ 
+### Packet filtering
+Performs filtering of packets to separate packets having specific
+properties from those not having them. A packet is selected if some specific fields are
+equal or in the range of given values. nfstream packet filtering is based on BPF filtering syntax.
 
 ### NFPacket
 In addition to these steps, NFObserver parses the packet in order to extract a set of informations (IP and 
@@ -49,8 +54,8 @@ transport levels mainly) and share it with the upper layer using **NFPacket** ob
 | `ip_size` | `int`  | IP packet size |
 | `transport_size` | `int`  | Transport packet size |
 | `payload_size` | `int`  | Packet payload size |
-| `ip_src` | `int`  | Source IP address numeric value |
-| `ip_dst` | `int`  | Destination IP address numeric value |
+| `src_ip` | `str`  | Source IP address string representation |
+| `dst_ip` | `str`  | Destination IP address string representation|
 | `src_port` | `int`  | Transport layer source port |
 | `dst_port` | `int`  | Transport layer destination port |
 | `protocol` | `int`  | Transport layer protocol |
@@ -145,12 +150,12 @@ implemented non volatile NFPlugins output construct the **NFEntry** exposed by N
 #### Core Features
 
 | `id` | `int`  | Flow identifier |
-| `bidirectional_first_seen_ms` | `float`  | Timestamp in milliseconds on first flow bidirectional packet |
-| `bidirectional_last_seen_ms` | `float`  | Timestamp in milliseconds on last flow bidirectional packet  |
-| `src2dst_first_seen_ms` | `float`  | Timestamp in milliseconds on first flow src2dst packet |
-| `src2dst_last_seen_ms` | `float`  | Timestamp in milliseconds on last flow src2dst packet  |
-| `dst2src_first_seen_ms` | `float`  | Timestamp in milliseconds on first flow dst2src packet |
-| `dst2src_last_seen_ms` | `float`  | Timestamp in milliseconds on last flow dst2src packet  |
+| `bidirectional_first_seen_ms` | `int`  | Timestamp in milliseconds on first flow bidirectional packet |
+| `bidirectional_last_seen_ms` | `int`  | Timestamp in milliseconds on last flow bidirectional packet  |
+| `src2dst_first_seen_ms` | `int`  | Timestamp in milliseconds on first flow src2dst packet |
+| `src2dst_last_seen_ms` | `int`  | Timestamp in milliseconds on last flow src2dst packet  |
+| `dst2src_first_seen_ms` | `int`  | Timestamp in milliseconds on first flow dst2src packet |
+| `dst2src_last_seen_ms` | `int`  | Timestamp in milliseconds on last flow dst2src packet  |
 | `version` | `int`  | IP version |
 | `src_port` | `int`  | Transport layer source port |
 | `dst_port` | `int`  | Transport layer destination port |
@@ -158,20 +163,18 @@ implemented non volatile NFPlugins output construct the **NFEntry** exposed by N
 | `vlan_id` | `int`  | Virtual LAN identifier |
 | `src_ip` | `str`  | Source IP address string representation |
 | `dst_ip` | `str`  | Destination IP address string representation |
-| `ip_src` | `int`  | Source IP address int value [volatile] |
-| `ip_dst` | `int`  | Destination IP address int value [volatile] |
 | `bidirectional_packets` | `int`  | Flow bidirectional packets accumulator |
 | `bidirectional_raw_bytes` | `int`  | Flow bidirectional raw bytes accumulator |
 | `bidirectional_ip_bytes` | `int`  | Flow bidirectional IP bytes accumulator |
-| `bidirectional_duration_ms` | `float`  | Flow bidirectional duration in milliseconds |
+| `bidirectional_duration_ms` | `int`  | Flow bidirectional duration in milliseconds |
 | `src2dst_packets` | `int`  | Flow src2dst packets accumulator |
 | `src2dst_raw_bytes` | `int`  | Flow src2dst raw bytes accumulator |
 | `src2dst_ip_bytes` | `int`  | Flow src2dst IP bytes accumulator |
-| `src2dst_duration_ms` | `float`  | Flow src2dst duration in milliseconds |
+| `src2dst_duration_ms` | `int`  | Flow src2dst duration in milliseconds |
 | `dst2src_packets` | `int`  | Flow dst2src packets accumulator |
 | `dst2src_raw_bytes` | `int`  | Flow dst2src raw bytes accumulator |
 | `dst2src_ip_bytes` | `int`  | Flow dst2src IP bytes accumulator |
-| `dst2src_duration_ms` | `float`  | Flow dst2src duration in milliseconds |
+| `dst2src_duration_ms` | `int`  | Flow dst2src duration in milliseconds |
 | `expiration_id` | `int`  | Identifier of flow expiration trigger. Can be 0 for idle_timeout, 1 for active_timeout or negative for custom expiration |
 
 #### Statistical Features
@@ -263,7 +266,10 @@ my_capture_streamer = NFStreamer(source="facebook.pcap", # or live interface
                                  max_udp_dissections=16,
                                  statistics=False,
                                  account_ip_padding_size=False,
-                                 enable_guess=True
+                                 enable_guess=True,
+                                 decode_tunnels=False,
+                                 bpf_filter=None,
+                                 promisc=True
 )
 
 """
@@ -288,6 +294,10 @@ NFStreamer Parameters:
                                                   reporting IP sizes.
         enable_guess [default= True]:             Enable/Disable identification engine port
                                                   guess heuristic.
+        decode_tunnels [default= False]:          Enable/Disable GTP/TZSP tunnels dissection.
+        bpf_filter [default= None]:               Specify a BPF filter for filtering selected 
+                                                  traffic
+        promisc [default= True]:                  Enable/Disable promiscuous capture mode.
 """
 ```
 

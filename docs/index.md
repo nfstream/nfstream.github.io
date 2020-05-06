@@ -29,7 +29,7 @@ the broader goal of becoming **a common network data processing framework for re
 
 ### Aggregating packets into flows
 
-Dealing with a big pcap file and just want to aggregate it as network flows? **nfstream** make this path easier in few lines:
+* Dealing with a big pcap file and just want to aggregate it as network flows? **nfstream** make this path easier in few lines:
 
 ```python
 from nfstream import NFStreamer
@@ -43,7 +43,10 @@ my_awesome_streamer = NFStreamer(source="facebook.pcap", # or network interface 
                                  max_udp_dissections=16,
                                  statistics=False,
                                  account_ip_padding_size=False,
-                                 enable_guess=True
+                                 enable_guess=True,
+                                 decode_tunnels=False,
+                                 bpf_filter=None,
+                                 promisc=True
 )
 
 for flow in my_awesome_streamer:
@@ -53,49 +56,47 @@ for flow in my_awesome_streamer:
 ```
 
 ```python
-NFEntry(
-    id=0,
-    bidirectional_first_seen_ms=1472393122365.661,
-    bidirectional_last_seen_ms=1472393123665.163,
-    src2dst_first_seen_ms=1472393122365.661,
-    src2dst_last_seen_ms=1472393123408.152,
-    dst2src_first_seen_ms=1472393122668.038,
-    dst2src_last_seen_ms=1472393123665.163,
-    version=4,
-    src_port=52066,
-    dst_port=443,
-    protocol=6,
-    vlan_id=4,
-    src_ip='192.168.43.18',
-    dst_ip='66.220.156.68',
-    bidirectional_packets=19,
-    bidirectional_raw_bytes=5745,
-    bidirectional_ip_bytes=5479,
-    bidirectional_duration_ms=1299.502197265625,
-    src2dst_packets=9, src2dst_raw_bytes=1345,
-    src2dst_ip_bytes=1219,
-    src2dst_duration_ms=1299.502197265625,
-    dst2src_packets=10,
-    dst2src_raw_bytes=4400,
-    dst2src_ip_bytes=4260,
-    dst2src_duration_ms=997.125,
-    expiration_id=0,
-    master_protocol=91,
-    app_protocol=119,
-    application_name='TLS.Facebook',
-    category_name='SocialNetwork',
-    client_info='facebook.com',
-    server_info='*.facebook.com,*.facebook.net,*.fb.com,*.fbcdn.net,\
-                *.fbsbx.com,*.m.facebook.com,*.messenger.com,*.xx.fbcdn.net,\
-                *.xy.fbcdn.net,*.xz.fbcdn.net,facebook.com,fb.com,messenger.com',
-    j3a_client='bfcc1a3891601edb4f137ab7ab25b840',
-    j3a_server='2d1eb5817ece335c24904f516ad5da12'
-)
-```
+NFEntry(id=0,
+        bidirectional_first_seen_ms=1472393122365,
+        bidirectional_last_seen_ms=1472393123665,
+        src2dst_first_seen_ms=1472393122365,
+        src2dst_last_seen_ms=1472393123408,
+        dst2src_first_seen_ms=1472393122668,
+        dst2src_last_seen_ms=1472393123665,
+        src_ip='192.168.43.18',
+        dst_ip='66.220.156.68',
+        version=4,
+        src_port=52066,
+        dst_port=443,
+        protocol=6,
+        vlan_id=4,
+        bidirectional_packets=19,
+        bidirectional_raw_bytes=5745,
+        bidirectional_ip_bytes=5479,
+        bidirectional_duration_ms=1300,
+        src2dst_packets=9,
+        src2dst_raw_bytes=1345,
+        src2dst_ip_bytes=1219,
+        src2dst_duration_ms=1300,
+        dst2src_packets=10,
+        dst2src_raw_bytes=4400,
+        dst2src_ip_bytes=4260,
+        dst2src_duration_ms=997,
+        expiration_id=0,
+        master_protocol=91,
+        app_protocol=119,
+        application_name='TLS.Facebook',
+        category_name='SocialNetwork',
+        client_info='facebook.com',
+        server_info='*.facebook.com,*.facebook.net,*.fb.com,\
+                     *.fbcdn.net,*.fbsbx.com,*.m.facebook.com,\
+                     *.messenger.com,*.xx.fbcdn.net,*.xy.fbcdn.net,\
+                     *.xz.fbcdn.net,facebook.com,fb.com,messenger.com',
+        j3a_client='bfcc1a3891601edb4f137ab7ab25b840',
+        j3a_server='2d1eb5817ece335c24904f516ad5da12')
 
-### Statistical features extraction
-
-* nfstream also extracts **60+ flow statistical features**
+ ```
+* nfstream also extracts [**60+ flow statistical features**][stat_feat]
 
 ```python
 from nfstream import NFStreamer
@@ -105,119 +106,113 @@ for flow in my_awesome_streamer:
 ```
 
 ```python
-NFEntry(
-    id=0,
-    bidirectional_first_seen_ms=1472393122365.661,
-    bidirectional_last_seen_ms=1472393123665.163,
-    src2dst_first_seen_ms=1472393122365.661,
-    src2dst_last_seen_ms=1472393123408.152,
-    dst2src_first_seen_ms=1472393122668.038,
-    dst2src_last_seen_ms=1472393123665.163,
-    version=4,
-    src_port=52066,
-    dst_port=443,
-    protocol=6,
-    vlan_id=4,
-    src_ip='192.168.43.18',
-    dst_ip='66.220.156.68',
-    bidirectional_packets=19,
-    bidirectional_raw_bytes=5745,
-    bidirectional_ip_bytes=5479,
-    bidirectional_duration_ms=1299.502197265625,
-    src2dst_packets=9,
-    src2dst_raw_bytes=1345,
-    src2dst_ip_bytes=1219,
-    src2dst_duration_ms=1299.502197265625,
-    dst2src_packets=10,
-    dst2src_raw_bytes=4400,
-    dst2src_ip_bytes=4260,
-    dst2src_duration_ms=997.125,
-    expiration_id=0,
-    bidirectional_min_raw_ps=66,
-    bidirectional_mean_raw_ps=302.36842105263156,
-    bidirectional_stdev_raw_ps=425.53315715259754,
-    bidirectional_max_raw_ps=1454,
-    src2dst_min_raw_ps=66,
-    src2dst_mean_raw_ps=149.44444444444446,
-    src2dst_stdev_raw_ps=132.20354676701294,
-    src2dst_max_raw_ps=449,
-    dst2src_min_raw_ps=66,
-    dst2src_mean_raw_ps=440.0,
-    dst2src_stdev_raw_ps=549.7164925870628,
-    dst2src_max_raw_ps=1454,
-    bidirectional_min_ip_ps=52,
-    bidirectional_mean_ip_ps=288.36842105263156,
-    bidirectional_stdev_ip_ps=425.53315715259754,
-    bidirectional_max_ip_ps=1440,
-    src2dst_min_ip_ps=52,
-    src2dst_mean_ip_ps=135.44444444444446,
-    src2dst_stdev_ip_ps=132.20354676701294,
-    src2dst_max_ip_ps=435,
-    dst2src_min_ip_ps=52,
-    dst2src_mean_ip_ps=426.0,
-    dst2src_stdev_ip_ps=549.7164925870628,
-    dst2src_max_ip_ps=1440,
-    bidirectional_min_piat_ms=0.0029296875,
-    bidirectional_mean_piat_ms=72.19456651475694,
-    bidirectional_stdev_piat_ms=137.32250609970072,
-    bidirectional_max_piat_ms=397.63720703125,
-    src2dst_min_piat_ms=0.008056640625,
-    src2dst_mean_piat_ms=130.3114013671875,
-    src2dst_stdev_piat_ms=179.64644832489174,
-    src2dst_max_piat_ms=414.4921875,
-    dst2src_min_piat_ms=0.006103515625,
-    dst2src_mean_piat_ms=110.79166666666669,
-    dst2src_stdev_piat_ms=169.61844149451002,
-    dst2src_max_piat_ms=0.531005859375,
-    bidirectional_syn_packets=2,
-    bidirectional_cwr_packets=0,
-    bidirectional_ece_packets=0,
-    bidirectional_urg_packets=0,
-    bidirectional_ack_packets=18,
-    bidirectional_psh_packets=9,
-    bidirectional_rst_packets=0,
-    bidirectional_fin_packets=0,
-    src2dst_syn_packets=1,
-    src2dst_cwr_packets=0,
-    src2dst_ece_packets=0,
-    src2dst_urg_packets=0,
-    src2dst_ack_packets=8,
-    src2dst_psh_packets=4,
-    src2dst_rst_packets=0,
-    src2dst_fin_packets=0,
-    dst2src_syn_packets=1,
-    dst2src_cwr_packets=0,
-    dst2src_ece_packets=0,
-    dst2src_urg_packets=0,
-    dst2src_ack_packets=10,
-    dst2src_psh_packets=5,
-    dst2src_rst_packets=0,
-    dst2src_fin_packets=0, 
-    master_protocol=91,
-    app_protocol=119,
-    application_name='TLS.Facebook',
-    category_name='SocialNetwork',
-    client_info='facebook.com',
-    server_info='*.facebook.com,*.facebook.net,*.fb.com,*.fbcdn.net,\
-                *.fbsbx.com,*.m.facebook.com,*.messenger.com,*.xx.fbcdn.net,\
-                *.xy.fbcdn.net,*.xz.fbcdn.net,facebook.com,fb.com,messenger.com',
-    j3a_client='bfcc1a3891601edb4f137ab7ab25b840',
-    j3a_server='2d1eb5817ece335c24904f516ad5da12'
-)
+NFEntry(id=0,      
+        bidirectional_first_seen_ms=1472393122365,
+        bidirectional_last_seen_ms=1472393123665,
+        src2dst_first_seen_ms=1472393122365,
+        src2dst_last_seen_ms=1472393123408,
+        dst2src_first_seen_ms=1472393122668,
+        dst2src_last_seen_ms=1472393123665,
+        src_ip='192.168.43.18',
+        dst_ip='66.220.156.68',
+        version=4,
+        src_port=52066,
+        dst_port=443,
+        protocol=6,
+        vlan_id=4,
+        bidirectional_packets=19,
+        bidirectional_raw_bytes=5745,
+        bidirectional_ip_bytes=5479,
+        bidirectional_duration_ms=1300,
+        src2dst_packets=9,
+        src2dst_raw_bytes=1345,
+        src2dst_ip_bytes=1219,
+        src2dst_duration_ms=1300,
+        dst2src_packets=10,
+        dst2src_raw_bytes=4400,
+        dst2src_ip_bytes=4260,
+        dst2src_duration_ms=997,
+        expiration_id=0,
+        bidirectional_min_raw_ps=66,
+        bidirectional_mean_raw_ps=302.36842105263156,
+        bidirectional_stdev_raw_ps=425.53315715259754,
+        bidirectional_max_raw_ps=1454,
+        src2dst_min_raw_ps=66,
+        src2dst_mean_raw_ps=149.44444444444446,
+        src2dst_stdev_raw_ps=132.20354676701294,
+        src2dst_max_raw_ps=449,
+        dst2src_min_raw_ps=66,
+        dst2src_mean_raw_ps=440.0,
+        dst2src_stdev_raw_ps=549.7164925870628,
+        dst2src_max_raw_ps=1454,
+        bidirectional_min_ip_ps=52,
+        bidirectional_mean_ip_ps=288.36842105263156,
+        bidirectional_stdev_ip_ps=425.53315715259754,
+        bidirectional_max_ip_ps=1440,
+        src2dst_min_ip_ps=52,
+        src2dst_mean_ip_ps=135.44444444444446,
+        src2dst_stdev_ip_ps=132.20354676701294,
+        src2dst_max_ip_ps=435,
+        dst2src_min_ip_ps=52,
+        dst2src_mean_ip_ps=426.0,
+        dst2src_stdev_ip_ps=549.7164925870628,
+        dst2src_max_ip_ps=1440,
+        bidirectional_min_piat_ms=0,
+        bidirectional_mean_piat_ms=72.22222222222223,
+        bidirectional_stdev_piat_ms=137.34994188549086,
+        bidirectional_max_piat_ms=398,
+        src2dst_min_piat_ms=0,
+        src2dst_mean_piat_ms=130.375,
+        src2dst_stdev_piat_ms=179.72036811192467,
+        src2dst_max_piat_ms=415,
+        dst2src_min_piat_ms=0,
+        dst2src_mean_piat_ms=110.77777777777777,
+        dst2src_stdev_piat_ms=169.51458475436397,
+        dst2src_max_piat_ms=1,
+        bidirectional_syn_packets=2,
+        bidirectional_cwr_packets=0,
+        bidirectional_ece_packets=0,
+        bidirectional_urg_packets=0,
+        bidirectional_ack_packets=18,
+        bidirectional_psh_packets=9,
+        bidirectional_rst_packets=0,
+        bidirectional_fin_packets=0,
+        src2dst_syn_packets=1,
+        src2dst_cwr_packets=0,
+        src2dst_ece_packets=0,
+        src2dst_urg_packets=0,
+        src2dst_ack_packets=8,
+        src2dst_psh_packets=4,
+        src2dst_rst_packets=0,
+        src2dst_fin_packets=0,
+        dst2src_syn_packets=1,
+        dst2src_cwr_packets=0,
+        dst2src_ece_packets=0,
+        dst2src_urg_packets=0,
+        dst2src_ack_packets=10,
+        dst2src_psh_packets=5,
+        dst2src_rst_packets=0,
+        dst2src_fin_packets=0,
+        master_protocol=91,
+        app_protocol=119,
+        application_name='TLS.Facebook',
+        category_name='SocialNetwork',
+        client_info='facebook.com',
+        server_info='*.facebook.com,*.facebook.net,*.fb.com,\
+                     *.fbcdn.net,*.fbsbx.com,*.m.facebook.com,\
+                     *.messenger.com,*.xx.fbcdn.net,*.xy.fbcdn.net,\
+                     *.xz.fbcdn.net,facebook.com,fb.com,messenger.com',
+        j3a_client='bfcc1a3891601edb4f137ab7ab25b840',
+        j3a_server='2d1eb5817ece335c24904f516ad5da12')
 ```
 
-### Getting flows into pandas
-
-Convert your packet to flow Pandas Dataframe using **nfstream**
+* From pcap to Pandas DataFrame?
 
 ```python
 my_dataframe = NFStreamer(source='devil.pcap').to_pandas()
 my_dataframe.head(5)
 ```
-
-### Adding a flow feature
-
-Didn't find a specific flow feature? add a plugin to **nfstream** in few lines:
+* Didn't find a specific flow feature? add a plugin to **nfstream** in few lines:
 
 ```python
 from nfstream import NFPlugin
@@ -230,7 +225,7 @@ class packet_with_666_size(NFPlugin):
             return 0
 	
     def on_update(self, pkt, flow): # flow update with each packet belonging to the flow
-        if pkt.pkt.raw_size == 666:
+        if pkt.raw_size == 666:
             flow.packet_with_666_size += 1
 		
 streamer_awesome = NFStreamer(source='devil.pcap', plugins=[packet_with_666_size()])
@@ -254,12 +249,12 @@ class feat_1(NFPlugin):
 
 class feat_2(NFPlugin):
     def on_update(self, obs, entry):
-        if entry.total_packets == 2:
+        if entry.bidirectional_packets == 2:
             entry.feat_2 == obs.raw_size
 
 class feat_3(NFPlugin):
     def on_update(self, obs, entry):
-        if entry.total_packets == 3:
+        if entry.bidirectional_packets == 3:
             entry.feat_3 == obs.raw_size
 ```
 
@@ -268,7 +263,7 @@ class feat_3(NFPlugin):
 ```python
 class model_prediction(NFPlugin):
     def on_update(self, obs, entry):
-        if entry.total_packets == 3:
+        if entry.bidirectional_packets == 3:
             entry.model_prediction = self.user_data.predict_proba([entry.feat_1,
                                                                    entry.feat_2,
                                                                    entry.feat_3])
