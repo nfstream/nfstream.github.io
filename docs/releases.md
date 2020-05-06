@@ -15,9 +15,19 @@ This page contains nfstream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
-## Latest Official Release - v4.0.1
+## Latest Official Release - v5.0.0
 
-Release date: 2020-04-23 {% include new-release.html %}
+Release date: 2020-05-06 {% include new-release.html %}
+
+* Rework packet observation module.
+* Add tunnel decoding feature.
+* Add BPF Filtering feature.
+* Add promisc option.
+* Add wheels for py36, py38, pypy3 on MacOS.
+
+## v4.0.1
+
+Release date: 2020-04-23
 
 * Add to_json method.
 * Add enable_guess parameter.

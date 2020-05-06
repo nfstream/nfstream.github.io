@@ -267,7 +267,7 @@ my_capture_streamer = NFStreamer(source="facebook.pcap", # or live interface
                                  statistics=False,
                                  account_ip_padding_size=False,
                                  enable_guess=True,
-                                 decode_tunnels=False,
+                                 decode_tunnels=True,
                                  bpf_filter=None,
                                  promisc=True
 )
@@ -294,7 +294,7 @@ NFStreamer Parameters:
                                                   reporting IP sizes.
         enable_guess [default= True]:             Enable/Disable identification engine port
                                                   guess heuristic.
-        decode_tunnels [default= False]:          Enable/Disable GTP/TZSP tunnels dissection.
+        decode_tunnels [default= True]:          Enable/Disable GTP/TZSP tunnels dissection.
         bpf_filter [default= None]:               Specify a BPF filter for filtering selected 
                                                   traffic
         promisc [default= True]:                  Enable/Disable promiscuous capture mode.
