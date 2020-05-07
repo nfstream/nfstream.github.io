@@ -304,12 +304,19 @@ NFStreamer Parameters:
 You can iterate over a streamer
 ```python
 for flow in my_capture_streamer:
-    print(flow)
+    print(flow)  # print it.
+    print(flow.to_namedtuple()) # convert it to a named tuple.
+    print(flow.to_json()) # convert it to json.
+    print(flow.keys()) # get flow keys.
+    print(flow.values()) # get flow values.
 ```
 or convert it to a pandas Dataframe.
 ```python
 df = my_capture_streamer.to_pandas()
 df.head(5)
 ```
-
+or convert it to a csv file.
+```python
+total_flows_rows = my_capture_streamer.csv(path="output.csv", sep=";")
+```
 

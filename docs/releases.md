@@ -15,10 +15,13 @@ This page contains nfstream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
-## Latest Official Release - v5.0.1
+## Latest Official Release - v5.1.0
 
-Release date: 2020-05-06 {% include new-release.html %}
+Release date: 2020-05-07 {% include new-release.html %}
 
+* Add to_csv export feature.
+* Rework to_pandas export.
+* Rework libpcap setup.
 * Patch for IPv6 support.
 
 ## v5.0.0
