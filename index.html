@@ -48,10 +48,12 @@ for flow in my_online_streamer:
     print(flow.values()) # get flow values.
 
 my_dataframe = NFStreamer(source="tor.pcap",
-                          statistics=True).to_pandas()
+                          statistics=True).to_pandas(ip_anonymization=False)
 
 flows_rows_count = NFStreamer(source="tor.pcap",
-                              statistics=True).to_csv()
+                              statistics=True).to_csv(path="output.csv",
+                                                      sep="|",
+                                                      ip_anonymization=False)
 {% endhighlight %}
       </div>
     </div>

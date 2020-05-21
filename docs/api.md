@@ -312,11 +312,13 @@ for flow in my_capture_streamer:
 ```
 or convert it to a pandas Dataframe.
 ```python
-df = my_capture_streamer.to_pandas()
+df = my_capture_streamer.to_pandas(ip_anonymization=False)
 df.head(5)
 ```
 or convert it to a csv file.
 ```python
-total_flows_rows = my_capture_streamer.csv(path="output.csv", sep=";")
+total_flows_rows = my_capture_streamer.csv(path="output.csv",
+                                           sep="|",
+                                           ip_anonymization=False)
 ```
 

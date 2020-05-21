@@ -15,12 +15,27 @@ This page contains nfstream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
-## Latest Official Release - v5.1.1
+## Latest Official Release - v5.1.3
 
-Release date: 2020-05-18 {% include new-release.html %}
+Release date: 2020-05-21 {% include new-release.html %}
 
-* Fix custom expiration handling.
-* Patch for server_names handling.
+* Add ip anonymization option.
+* Add ip_src_type and ip_dst_type features.
+* Add support for arm64 architecture.
+
+## v5.1.2
+
+Release date: 2020-05-19
+
+* Improve NULL values handling.
+* Improve pandas dataframe types handling.
+
+## v5.1.1
+
+Release date: 2020-05-18
+
+* Fix custom expiration handling..
+* Path for server_names handling.
 
 ## v5.1.0
 

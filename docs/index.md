@@ -51,8 +51,10 @@ my_awesome_streamer = NFStreamer(source="facebook.pcap", # or network interface 
 
 for flow in my_awesome_streamer:
     print(flow)  # print it.
-    print(flow.to_namedtuple()) # convert it to a named tuple.
+    print(flow.to_namedtuple()) # convert it to a namedtuple.
     print(flow.to_json()) # convert it to json.
+    print(flow.keys()) # get flow keys.
+    print(flow.values()) # get flow values.
 ```
 
 ```python
@@ -64,7 +66,9 @@ NFEntry(id=0,
         dst2src_first_seen_ms=1472393122668,
         dst2src_last_seen_ms=1472393123665,
         src_ip='192.168.43.18',
+        src_ip_type=1,
         dst_ip='66.220.156.68',
+        dst_ip_type=0,
         version=4,
         src_port=52066,
         dst_port=443,
@@ -114,7 +118,9 @@ NFEntry(id=0,
         dst2src_first_seen_ms=1472393122668,
         dst2src_last_seen_ms=1472393123665,
         src_ip='192.168.43.18',
+        src_ip_type=1,
         dst_ip='66.220.156.68',
+        dst_ip_type=0,
         version=4,
         src_port=52066,
         dst_port=443,
@@ -209,8 +215,16 @@ NFEntry(id=0,
 * From pcap to Pandas DataFrame?
 
 ```python
-my_dataframe = NFStreamer(source='devil.pcap').to_pandas()
+flows_count = NFStreamer(source='devil.pcap').to_pandas(ip_anonymization=False)
 my_dataframe.head(5)
+```
+
+* From pcap to csv file?
+
+```python
+flows_rows_count = NFStreamer(source='devil.pcap').to_csv(path="devil.pcap.csv",
+                                                          sep="|",
+                                                          ip_anonymization=False)
 ```
 * Didn't find a specific flow feature? add a plugin to **nfstream** in few lines:
 
@@ -245,20 +259,20 @@ from nfstream import NFPlugin
 
 class feat_1(NFPlugin):
     def on_init(self, obs):
-        entry.feat_1 == obs.raw_size
+        entry.feat_1 = obs.raw_size
 
 class feat_2(NFPlugin):
     def on_update(self, obs, entry):
         if entry.bidirectional_packets == 2:
-            entry.feat_2 == obs.raw_size
+            entry.feat_2 = obs.raw_size
 
 class feat_3(NFPlugin):
     def on_update(self, obs, entry):
         if entry.bidirectional_packets == 3:
-            entry.feat_3 == obs.raw_size
+            entry.feat_3 = obs.raw_size
 ```
 
-#### Trained model mrediction
+#### Trained model prediction
 
 ```python
 class model_prediction(NFPlugin):
@@ -267,7 +281,7 @@ class model_prediction(NFPlugin):
             entry.model_prediction = self.user_data.predict_proba([entry.feat_1,
                                                                    entry.feat_2,
                                                                    entry.feat_3])
-            # optionally we can force NFStreamer to immediately expires the flow
+            # optionally we can trigger NFStreamer to immediately expires the flow
             # entry.expiration_id = -1
 ```
 
