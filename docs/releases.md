@@ -15,9 +15,31 @@ This page contains nfstream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
-## Latest Official Release - v5.1.3
+## Latest Official Release - v5.1.6
 
-Release date: 2020-05-21 {% include new-release.html %}
+Release date: 2020-07-11 {% include new-release.html %}
+
+* nDPI maintenance update (12abcd516b468f6e0070308fa57052b93aa3a3ca).
+* Fix payload size computation.
+* Add length check for MPLS.
+* ZMQ sockets graceful close.
+
+## v5.1.5
+
+Release date: 2020-05-23
+
+* Fix broken wheels.
+
+## v5.1.4
+
+Release date: 2020-05-23
+
+* nDPI maintenance update (e5c2c400efa7a9b239be36ca95dd296a779ae363)
+* Fix VLAN_ID issue.
+
+## v5.1.3
+
+Release date: 2020-05-21
 
 * Add ip anonymization option.
 * Add ip_src_type and ip_dst_type features.
