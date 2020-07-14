@@ -6,7 +6,7 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://nfstream.github.io"
 twitter_username: aouinizied
 github_username:  aouinizied
-logo_source: /resources/logo_white.png
+logo_source: /resources/preview.png
 logo_width: 180
 
 # Build settings
