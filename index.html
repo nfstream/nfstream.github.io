@@ -42,8 +42,8 @@ from nfstream import NFStreamer, NFPlugin
 my_online_streamer = NFStreamer(source="eth0")
 for flow in my_online_streamer:
     print(flow)  # print it.
-    # Additional formats: flow.to_namedtuple(), flow.to_json()
-    #                     flow.keys(), flow.values()
+    # Additional formats:flow.to_namedtuple(),flow.to_json()
+    #                    flow.keys(),flow.values()
 
 my_streamer = NFStreamer(source="tor.pcap", statistics=True)
 my_dataframe = my_streamer.to_pandas(ip_anonymization=False)
