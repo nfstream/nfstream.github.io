@@ -24,7 +24,7 @@ python3 -m pip install nfstream
 
 ## Build From Source Code
 
-If you want to build nfstream from sources on your local machine:
+If you want to build NFStream from sources on your local machine:
 
 ### Linux Instructions
 

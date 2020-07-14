@@ -7,9 +7,9 @@ nav_order: 9
 
 # Releases
 
-A complete release history for nfstream is available [on GitHub](https://github.com/aouinizied/nfstream/releases).
+A complete release history for NFStream is available [on GitHub](https://github.com/aouinizied/nfstream/releases).
 
-This page contains nfstream release history
+This page contains NFStream release history
 
 ## Latest Unofficial Release (`master` branch)
 

@@ -11,7 +11,7 @@ nav_order: 4
 
 A step by step walk through each process involved when performing flow monitoring is depicted in the above schema.
 Our aim is to provide you with a reminder about how things works in theory. Consequently, an easier understanding of 
-nfstream features and implementation is possible.
+NFStream features and implementation is possible.
 
 ## Table of contents
 {: .no_toc .text-delta }
@@ -28,7 +28,7 @@ the following steps:
 This step is performed on the Network Interface Card (NIC) level. After passing various checks such 
 as checksum error, packets stored in on-card reception buffers are moved to the hosting device memory. 
 Several libraries are available to capture network traffic such as libpcap for UNIX based operating systems Winpcap 
-for Windows. nfstream implementation is based on libpcap.
+for Windows. NFStream implementation is based on libpcap.
 
 ### Truncation
 Defining a snapshot length, the process selects precise bytes from the packet. It is performed in some cases to reduce
@@ -37,13 +37,13 @@ the amount of data captured and therefore CPU and bus bandwidth load.
 ### Timestamping
 As packets may come from several observation points, reordering process is based on packet’s timestamp. 
 While hardware timestamping provides a high accuracy up to 100 nanoseconds in case of the IEEE 1588 protocol, 
-it’s not supported by most of commodity NIC. nfstream is based on software timestamping which is widely used to outcome
+it’s not supported by most of commodity NIC. NFStream is based on software timestamping which is widely used to outcome
  this lack providing milliseconds accuracy.
  
 ### Packet filtering
 Performs filtering of packets to separate packets having specific
 properties from those not having them. A packet is selected if some specific fields are
-equal or in the range of given values. nfstream packet filtering is based on BPF filtering syntax.
+equal or in the range of given values. NFStream packet filtering is based on BPF filtering syntax.
 
 ### NFPacket
 In addition to these steps, NFObserver parses the packet in order to extract a set of informations (IP and 
@@ -96,7 +96,7 @@ It is possible to configure our metering process based on expiration policy to r
 
 ### NFPlugin
 
-A flow in nfstream is defined as an **NFEntry**. NFEntry is defined as a set of **NFPlugins** outputs. Each time 
+A flow in NFStream is defined as an **NFEntry**. NFEntry is defined as a set of **NFPlugins** outputs. Each time 
 a flow is created, updated or expired, a set of NFPlugins perform the required computations.
 
 ```python
@@ -254,7 +254,7 @@ implemented non volatile NFPlugins output construct the **NFEntry** exposed by N
 
 ## NFStreamer: The Export Layer
 
-NFStreamer is the main class of nfstream framework and implements also the export layer within a flow monitoring schema.
+NFStreamer is the main class of NFStream framework and implements also the export layer within a flow monitoring schema.
 ```python
 my_capture_streamer = NFStreamer(source="facebook.pcap", # or live interface
                                  snaplen=65535,

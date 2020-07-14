@@ -7,7 +7,7 @@ nav_order: 5
 
 # nDPI Support
 
-**nfstream** deep packet inspection engine is based on **nDPI**. It allows nfstream to 
+**NFStream** deep packet inspection engine is based on **nDPI**. It allows NFStream to 
 perform reliable encrypted applications identification and metadata extraction 
 (e.g. TLS, QUIC, TOR, HTTP, SSH, DNS, etc.).
 

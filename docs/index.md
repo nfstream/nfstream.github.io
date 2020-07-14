@@ -8,7 +8,7 @@ nav_order: 1
 # Getting Started
 {: .no_toc }
 
-[**nfstream**][repo] is a Python package providing fast, flexible, and expressive data structures designed to make working with **online** or **offline** network data both easy and intuitive. It aims to be the fundamental high-level building block for
+[**NFStream**][repo] is a Python package providing fast, flexible, and expressive data structures designed to make working with **online** or **offline** network data both easy and intuitive. It aims to be the fundamental high-level building block for
 doing practical, **real world** network data analysis in Python. Additionally, it has
 the broader goal of becoming **a common network data processing framework for researchers** providing data reproducibility across experiments.
 
@@ -20,8 +20,8 @@ the broader goal of becoming **a common network data processing framework for re
 
 ## Main Features
 
-* **Performance:** **nfstream** is designed to be fast (x10 faster with pypy3 support) with a small CPU and memory footprint.
-* **Layer-7 visibility:** **nfstream** deep packet inspection engine is based on [**nDPI**][ndpi]. It allows nfstream to perform [**reliable**][reliable] encrypted applications identification and metadata extraction (e.g. TLS, QUIC, TOR, HTTP, SSH, DNS, etc.).
+* **Performance:** **NFStream** is designed to be fast (x10 faster with pypy3 support) with a small CPU and memory footprint.
+* **Layer-7 visibility:** **NFStream** deep packet inspection engine is based on [**nDPI**][ndpi]. It allows NFStream to perform [**reliable**][reliable] encrypted applications identification and metadata extraction (e.g. TLS, QUIC, TOR, HTTP, SSH, DNS, etc.).
 * **Flexibility:** add a flow feature in 2 lines as an [**NFPlugin**][nfplugin].
 * **Machine Learning oriented:** add your trained model as an [**NFPlugin**][nfplugin]. 
 
@@ -29,7 +29,7 @@ the broader goal of becoming **a common network data processing framework for re
 
 ### Aggregating packets into flows
 
-* Dealing with a big pcap file and just want to aggregate it as network flows? **nfstream** make this path easier in few lines:
+* Dealing with a big pcap file and just want to aggregate it as network flows? **NFStream** make this path easier in few lines:
 
 ```python
 from nfstream import NFStreamer
@@ -100,7 +100,7 @@ NFEntry(id=0,
         j3a_server='2d1eb5817ece335c24904f516ad5da12')
 
  ```
-* nfstream also extracts [**60+ flow statistical features**][stat_feat]
+* NFStream also extracts [**60+ flow statistical features**][stat_feat]
 
 ```python
 from nfstream import NFStreamer
@@ -226,7 +226,7 @@ flows_rows_count = NFStreamer(source='devil.pcap').to_csv(path="devil.pcap.csv",
                                                           sep="|",
                                                           ip_anonymization=False)
 ```
-* Didn't find a specific flow feature? add a plugin to **nfstream** in few lines:
+* Didn't find a specific flow feature? add a plugin to **NFStream** in few lines:
 
 ```python
 from nfstream import NFPlugin

@@ -5,10 +5,10 @@ permalink: /docs/community
 nav_order: 8
 ---
 
-# Welcome to the nfstream community
+# Welcome to the NFStream community
 {: .no_toc }
 
-nfstream is open source and we would love to hear from you! Below you'll find ways to contact us and get involved in 
+NFStream is open source and we would love to hear from you! Below you'll find ways to contact us and get involved in 
 the community as well as links to resources that can help answer your questions.
 
 ## Table of contents
@@ -27,19 +27,19 @@ There are multiple ways to contact us. Please feel free to reach out for any iss
 
 ## Support Us
 
-Thank you for using nfstream! If you'd like to support us you can do it in various ways:
+Thank you for using NFStream! If you'd like to support us you can do it in various ways:
 
 - <script async defer src="https://buttons.github.io/buttons.js"></script><a class="github-button" href="https://github.com/aouinizied/nfstream" data-icon="octicon-star" data-show-count="true" aria-label="Star aouinizied/nfstream on GitHub">Star</a> Give us a star on GitHub.
 - <script async defer src="https://buttons.github.io/buttons.js"></script><a class="github-button" href="https://github.com/sponsors/aouinizied" data-icon="octicon-heart" aria-label="Sponsor @aouinizied on GitHub">Sponsor</a> Become a Sponsor.
-- Spread the word about nfstream in the social media, articles, web-sites or anywhere you can.
+- Spread the word about NFStream in the social media, articles, web-sites or anywhere you can.
 
 ## Contribute
 
-Thank you for your interest in contributing to nfstream! There are multiple ways and places you can contribute, and we're here to help facilitate that.
+Thank you for your interest in contributing to NFStream! There are multiple ways and places you can contribute, and we're here to help facilitate that.
 
 ### Report an issue
 
-If you have found an issue in nfstream please don't hesitate to reach out. The best way to open an issue is through the [GitHub page](https://github.com/aouinizied/nfstream/issues) but you can also report issues by email or in the Gitter channel.
+If you have found an issue in NFStream please don't hesitate to reach out. The best way to open an issue is through the [GitHub page](https://github.com/aouinizied/nfstream/issues) but you can also report issues by email or in the Gitter channel.
 
 When filing your issue please make sure you provide a reproducible test case. Please also provide as much information about your environment as possible. We never know what information will be pertinent when trying narrow down the issue. Please include at least the following information:
 
@@ -53,4 +53,4 @@ If you already looked at the code and found the root cause - that's great! You c
 
 ### Code contributions
 
-If you'd like to fix bugs or add a new feature to nfstream, please make sure to read the [CONTRIBUTING](https://github.com/aouinizied/nfstream/blob/master/.github/CONTRIBUTING.rst) document. This document should provide you with all the necessary information on how to create the pull request, what it should include and how the review process works.
+If you'd like to fix bugs or add a new feature to NFStream, please make sure to read the [CONTRIBUTING](https://github.com/aouinizied/nfstream/blob/master/.github/CONTRIBUTING.rst) document. This document should provide you with all the necessary information on how to create the pull request, what it should include and how the review process works.
