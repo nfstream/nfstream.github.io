@@ -3,7 +3,7 @@ email: aouinizied@gmail.com
 description: nfstream is a Python package providing fast, flexible, and expressive data structures designed to make working with online or offline network data both easy and intuitive.
 image: /resources/aaa.png
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://nfstream.github.io"
+url: "https://nfstream.org"
 twitter_username: aouinizied
 github_username:  aouinizied
 logo_source: /resources/logo_white.png
