@@ -7,7 +7,7 @@ nav_exclude: true
 <div class="lp-container">
   <header class="lp-header">
     <div class="lp-center">
-      <h1 style="font-weight: bold">A Flexible Network Data Analysis Framework</h1>
+      <h1 style="font-weight: bold">NFStream: Flexible Network Data Analysis Framework</h1>
       <h2 style="padding-bottom: 30px">NFStream is a Python package providing fast, flexible, and expressive data structures
         designed to make working with online or offline network data both easy and intuitive.</h2>
       <a href="https://mybinder.org/v2/gh/aouinizied/nfstream-tutorials/master?filepath=demo_notebook.ipynb" class="btn btn-blue fs-5 mb-3 mb-md-5 mr-5">Live Notebook</a>
@@ -62,15 +62,15 @@ my_dataframe = my_streamer.to_pandas(ip_anonymization=False)
                   <div class="lp-col">
 {% highlight python %}
 
-class dst_to_src_ack_count(NFPlugin):
+class dst2src_ack_count(NFPlugin):
    # We skip on_init as it will be set to 0 by default
    def on_update(self, pkt, flow):
    """flow update with each packet belonging to the flow"""
       if pkt.tcpflags.ack == 1:
-         flow.ack_count += 1
+         flow.dst2src_ack_count += 1
 
 streamer_awesome = NFStreamer(source='devil.pcap',
-                              plugins=[ack_count()])
+                              plugins=[dst2src_ack_count()])
 
 {% endhighlight %}
       </div>
