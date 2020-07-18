@@ -265,7 +265,6 @@ my_capture_streamer = NFStreamer(source="facebook.pcap", # or live interface
                                  max_tcp_dissections=10,
                                  max_udp_dissections=16,
                                  statistics=False,
-                                 account_ip_padding_size=False,
                                  enable_guess=True,
                                  decode_tunnels=True,
                                  bpf_filter=None,
@@ -290,8 +289,6 @@ NFStreamer Parameters:
         max_udp_dissections [default= 16]:        Maximum per flow UDP packets to dissect 
                                                   (ignored when dissect=False).
         statistics [default= False]:              Enable statistical flow features extraction.
-        account_ip_padding_size [default= False]: Enable Ethernet padding accounting when 
-                                                  reporting IP sizes.
         enable_guess [default= True]:             Enable/Disable identification engine port
                                                   guess heuristic.
         decode_tunnels [default= True]:          Enable/Disable GTP/TZSP tunnels dissection.

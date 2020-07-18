@@ -15,9 +15,17 @@ This page contains NFStream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
+## Latest Official Release - v5.2.0
+
+Release date: 2020-07-18 {% include new-release.html %}
+
+* Switch to pure header based packet sizes computation.
+* Fix some minor issue with to_pandas() method.
+* Drop account_ip_padding_size option.
+
 ## Latest Official Release - v5.1.6
 
-Release date: 2020-07-11 {% include new-release.html %}
+Release date: 2020-07-11
 
 * nDPI maintenance update (12abcd516b468f6e0070308fa57052b93aa3a3ca).
 * Fix payload size computation.
