@@ -15,9 +15,29 @@ This page contains NFStream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
+## Latest Official Release - v6.0.1
+
+Release date: 2020-09-09 {% include new-release.html %}
+
+* Fix performance summary on live interface.
+
+## Latest Official Release - v6.0.0
+
+Release date: 2020-09-09
+
+* Introduce parallelized metering architecture.
+* Rework feature computation engine (performance boosted).
+* Introduce SPLT analysis.
+* Add configurable accounting mode.
+* Add performance reporting feature.
+* Improve Pandas and CSV interfaces.
+* nDPI maintenance update.
+* Several bug fixes and improvements.
+* Major refactoring.
+
 ## Latest Official Release - v5.2.0
 
-Release date: 2020-07-18 {% include new-release.html %}
+Release date: 2020-07-18
 
 * Switch to pure header based packet sizes computation.
 * Fix some minor issue with to_pandas() method.
