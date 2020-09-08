@@ -8,7 +8,7 @@ nav_order: 1
 # Getting Started
 {: .no_toc }
 
-[**NFStream**][repo] is a Python framework providing fast, flexible, and expressive data structures designed to make 
+**NFStream** is a Python framework providing fast, flexible, and expressive data structures designed to make 
 working with **online** or **offline** network data both easy and intuitive. It aims to be the fundamental high-level 
 building block for doing practical, **real world** network data analysis in Python. Additionally, it has the broader 
 goal of becoming **a common network data analytics framework for researchers** providing data reproducibility 
@@ -73,7 +73,7 @@ python3 setup.py bdist_wheel
 ```
 
 [ndpi]: https://github.com/ntop/nDPI
-[nfplugin]: https://nfstream.org/docs/plugins
+[nfplugin]: https://www.nfstream.org/docs/api#nfplugin
 [reliable]: http://people.ac.upc.edu/pbarlet/papers/ground-truth.pam2014.pdf
 [pypy]: https://www.pypy.org/
 [cffi]: https://cffi.readthedocs.io/en/latest/index.html

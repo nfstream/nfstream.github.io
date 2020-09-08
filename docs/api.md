@@ -56,9 +56,9 @@ my_streamer = NFStreamer(source="facebook.pcap",
 | `bpf_filter` | `[default=None]` | Specify a [BPF filter][bpf] filter for filtering selected traffic.  |
 | `promiscuous_mode` | `[default=True]` | Enable/Disable promiscuous capture mode.  |
 | `snapshot_length` | `[default=1500]` | Control packet slicing size (truncation) in bytes.  |
-| `idle_timeout` | `[default=30]` | Flows that are idle (no packets received) for more than this value in seconds will be exported. |
-| `active_timeout` | `[default=300]` | Flows that are active for more than this value in seconds will be exported.  |
-| `accounting_mode` | `[default=0]` | Specify the accounting mode that will be used to report bytes related features (0: ethernet, 1: ip, 2: transport, 3:payload).  |
+| `idle_timeout` | `[default=30]` | Flows that are idle (no packets received) for more than this value in seconds are expired. |
+| `active_timeout` | `[default=300]` | Flows that are active for more than this value in seconds are expired.  |
+| `accounting_mode` | `[default=0]` | Specify the accounting mode that will be used to report bytes related features (0: Link layer, 1: IP layer, 2: Transport layer, 3: Payload).  |
 | `udps` | `[default=None]` | Specify user defined NFPlugins used to extend NFStreamer. |
 | `n_dissections` | `[default=20]` | Number of per flow packets to dissect for L7 visibility feature. When set to 0, L7 visibility feature is disabled. |
 | `statistical_analysis` | `[default=False]` | Enable/Disable post-mortem flow statistical analysis.  |
@@ -68,14 +68,14 @@ my_streamer = NFStreamer(source="facebook.pcap",
 
 ### NFStreamer methods
 
-#### \_\_iter__()
+#### Flow interation method
 
 ```python
 for flow in my_streamer:
    print(flow) # or whatever
 ```
 
-#### to_pandas(ip_anonymization=False)
+#### Pandas dataframe conversion
 
 ```python
 my_dataframe = my_streamer.to_pandas(ip_anonymization=False)
@@ -84,7 +84,7 @@ my_dataframe.head()
 
 | `ip_anonymization` | `[default=False]` | Enable/Disable IP anonymization. IP anonymization is based on a random secret key generation at each start of NFStreamer. The generated key is used to anonymize IP source and IP destination fields using blake2b algorithm. |
 
-#### to_csv(path=None, ip_anonymization=False, flows_per_file=0)
+#### CSV file conversion
 
 ```python
 total_flows_count = my_streamer.to_csv(path=None, ip_anonymization=False, flows_per_file=0)
@@ -96,43 +96,43 @@ total_flows_count = my_streamer.to_csv(path=None, ip_anonymization=False, flows_
 
 ## NFlow
 
-NFlow is the flow represention within NFStream. It contains all computed flow features accoring to NFStreamer configuration.
+NFlow is the flow representation within NFStream. It contains all computed flow features according to NFStreamer configuration.
 In the following we detail each implemented feature.
 
 #### NFlow Core Features
 
 | `id` | `int`  | Flow identifier |
-| `expiration_id` | `int`  | Identifier of flow expiration trigger. Can be 0 for idle_timeout, 1 for active_timeout or -1 for custom expiration |
-| `src_ip` | `str`  | Source IP address string representation |
-| `src_ip_is_private` | `str`  | Source IP address type (1 if private, else 0) |
-| `src_port` | `int`  | Transport layer source port |
-| `dst_ip` | `str`  | Destination IP address string representation |
-| `dst_ip_is_private` | `str`  | Destination IP address type (1 if private, else 0) |
-| `dst_port` | `int`  | Transport layer destination port |
-| `protocol` | `int`  | Transport layer protocol |
-| `ip_version` | `int`  | IP version |
-| `vlan_id` | `int`  | Virtual LAN identifier |
-| `bidirectional_first_seen_ms` | `int`  | Timestamp in milliseconds on first flow bidirectional packet |
-| `bidirectional_last_seen_ms` | `int`  | Timestamp in milliseconds on last flow bidirectional packet  |
-| `bidirectional_duration_ms` | `int`  | Flow bidirectional duration in milliseconds |
-| `bidirectional_packets` | `int`  | Flow bidirectional packets accumulator |
-| `bidirectional_bytes` | `int`  | Flow bidirectional bytes accumulator (depends on accounting_mode) |
-| `src2dst_first_seen_ms` | `int`  | Timestamp in milliseconds on first flow src2dst packet |
-| `src2dst_last_seen_ms` | `int`  | Timestamp in milliseconds on last flow src2dst packet  |
-| `src2dst_duration_ms` | `int`  | Flow src2dst duration in milliseconds |
-| `src2dst_packets` | `int`  | Flow src2dst packets accumulator |
-| `src2dst_bytes` | `int`  | Flow src2dst bytes accumulator (depends on accounting_mode) |
-| `dst2src_first_seen_ms` | `int`  | Timestamp in milliseconds on first flow dst2src packet |
-| `dst2src_last_seen_ms` | `int`  | Timestamp in milliseconds on last flow dst2src packet  |
-| `dst2src_duration_ms` | `int`  | Flow dst2src duration in milliseconds |
-| `dst2src_packets` | `int`  | Flow dst2src packets accumulator |
-| `dst2src_bytes` | `int`  | Flow dst2src bytes accumulator (depends on accounting_mode) |
+| `expiration_id` | `int`  | Identifier of flow expiration trigger. Can be 0 for idle_timeout, 1 for active_timeout or -1 for custom expiration. |
+| `src_ip` | `str`  | Source IP address string representation. |
+| `src_ip_is_private` | `bool`  | Source IP address type (1 if private, else 0). |
+| `src_port` | `int`  | Transport layer source port. |
+| `dst_ip` | `str`  | Destination IP address string representation. |
+| `dst_ip_is_private` | `bool`  | Destination IP address type (1 if private, else 0). |
+| `dst_port` | `int`  | Transport layer destination port. |
+| `protocol` | `int`  | Transport layer protocol. |
+| `ip_version` | `int`  | IP version. |
+| `vlan_id` | `int`  | Virtual LAN identifier. |
+| `bidirectional_first_seen_ms` | `int`  | Timestamp in milliseconds on first flow bidirectional packet. |
+| `bidirectional_last_seen_ms` | `int`  | Timestamp in milliseconds on last flow bidirectional packet. |
+| `bidirectional_duration_ms` | `int`  | Flow bidirectional duration in milliseconds. |
+| `bidirectional_packets` | `int`  | Flow bidirectional packets accumulator. |
+| `bidirectional_bytes` | `int`  | Flow bidirectional bytes accumulator (depends on accounting_mode). |
+| `src2dst_first_seen_ms` | `int`  | Timestamp in milliseconds on first flow src2dst packet. |
+| `src2dst_last_seen_ms` | `int`  | Timestamp in milliseconds on last flow src2dst packet.  |
+| `src2dst_duration_ms` | `int`  | Flow src2dst duration in milliseconds. |
+| `src2dst_packets` | `int`  | Flow src2dst packets accumulator. |
+| `src2dst_bytes` | `int`  | Flow src2dst bytes accumulator (depends on accounting_mode). |
+| `dst2src_first_seen_ms` | `int`  | Timestamp in milliseconds on first flow dst2src packet. |
+| `dst2src_last_seen_ms` | `int`  | Timestamp in milliseconds on last flow dst2src packet.  |
+| `dst2src_duration_ms` | `int`  | Flow dst2src duration in milliseconds. |
+| `dst2src_packets` | `int`  | Flow dst2src packets accumulator. |
+| `dst2src_bytes` | `int`  | Flow dst2src bytes accumulator (depends on accounting_mode). |
 
 #### NFlow Layer-7 Visibility Features (n_dissections>0)
 
 | `application_name` | `str`  | nDPI detected application name. |
 | `application_category_name` | `str`  | nDPI detected application category name. |
-| `application_is_guessed` | `int`  | Indicates if detection result is based on pure dissection or port_based guess. |
+| `application_is_guessed` | `int`  | Indicates if detection result is based on pure dissection or on a port-based guess. |
 | `requested_server_name` | `str`  | Requested server name (SSL/TLS, DNS, HTTP). |
 | `client_fingerprint` | `str`  | Client fingerprint (DHCP fingerprint for DHCP, [JA3][ja3] for SSL/TLS and [HASSH][hassh] for SSH). |
 | `server_fingerprint` | `str`  | Server fingerprint ([JA3][ja3] for SSL/TLS and [HASSH][hassh] for SSH). |
@@ -203,9 +203,10 @@ In the following we detail each implemented feature.
 NFPlugin is the main class for extending NFStream. It can be used for the following use cases:
 * Changing the expiration logic of NFStream with custom expiration.
 * Create a set of new NFlow features.
-* Deploy Machine Learning Models
+* Deploy Machine Learning Models.
+* Combination of the above possibilities.
 
-In the following, we provide the prototype of NFPlugin class that your plugin must inherit from.
+In the following, we provide the prototype of NFPlugin class that a user defined plugin must inherit from.
 
 ```python
 class NFPlugin(object):
@@ -297,7 +298,7 @@ information are exposed in an NFPacket (Network Flow Packet) which contains the 
 
 #### Flow Slicer
 
-In the following, we implement a flow slicer NFPlugin, that will force NFStream to expire each flow that reaches a 
+In the following, we implement a flow slicer NFPlugin, which will force NFStream to expire each flow that reaches a 
 packet count limit.
 
 ```python
@@ -376,7 +377,7 @@ for flow in streamer: # Work also with to_pandas, to_csv
 
 In the the following, we demonstrate a simplistic machine learning approach training and deployment.
 We suppose that we want to run a classification of Social Network category flows based on bidirectional_packets and 
-bidirectional_bytes as features. For the sake of brevity, we decide to predict only at flow expiration stage.
+bidirectional_bytes as input features. For the sake of brevity, we decide to predict only at flow expiration stage.
 
 ##### Training the model
 

@@ -9,7 +9,7 @@ nav_order: 5
 
 As part of NFStream Framework, we offer an open datasets collection that are collected using NFStream in several network 
 environments. Our goal is to make network traffic measurement and analytics experiments simple, comparable, and 
-reproducible (**work on progress**).
+reproducible (**coming soon**).
 
 ## Table of contents
 {: .no_toc .text-delta }
