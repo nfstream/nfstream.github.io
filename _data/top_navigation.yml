@@ -5,8 +5,8 @@ left_items:
   - name: Live Notebook
     link: https://mybinder.org/v2/gh/aouinizied/nfstream-tutorials/master?filepath=demo_notebook.ipynb
     external_link: true
-  - name: API
-    link: /docs/api
+  - name: Datasets
+    link: /docs/datasets
     external_link: false
   - name: Community
     link: /docs/community

@@ -9,9 +9,19 @@ nav_order: 4
 
 <img src="{{ site.baseurl }}/resources/architecture_nfstream.png" alt="drawing" width="730"/>
 
-A step by step walk through each process involved when performing flow monitoring is depicted in the above schema.
-Our aim is to provide you with a reminder about how things works in theory. Consequently, an easier understanding of 
-NFStream features and implementation is possible.
+The flow-based aggregation consists of aggregating packets into flows based on a shared set of characteristics 
+(flow key, e.g., source IP address, destination IP address, transport protocol, source port, destination port, 
+VLAN identifier). A flow cache maintains each flow entry until its termination (e.g., active timeout, inactive timeout).
+While the entry is present in the flow cache, basic counters, and several metrics are updated. 
+If two pairs generate flows on both directions, the flow cache uses a bidirectional flow definition, adding counters 
+and metrics for both directions.
+
+In the above schema, NFStream overall architecture is depicted and could be summarized as follows:
+* NFStreamer: the driver process, it is responsible of setting the overall workflow which is mainly an orchestration of 
+parallel metering processes.
+* Meters: are the core parts of NFStream framework. Raw packets are processed (e.g. timestamped, decoded, truncated) 
+and dispatched across meters. Each meter is able to aggregate packet information into flow and compute required features 
+until flow expiration is triggered (active timeout, inactive timeout).
 
 ## Table of contents
 {: .no_toc .text-delta }
@@ -19,303 +29,387 @@ NFStream features and implementation is possible.
 1. TOC
 {:toc}
 
-## NFObserver: The Packet Observation Layer
+## NFStreamer
 
-NFObserver is the implementation of packet observation layer within a flow monitoring framework and performs currently
-the following steps:
+```python
+from nfstream import NFStreamer
+my_streamer = NFStreamer(source="facebook.pcap",
+                         decode_tunnels=True,
+                         bpf_filter=None,
+                         promiscuous_mode=True,
+                         snapshot_length=1500,
+                         idle_timeout=30,
+                         active_timeout=300,
+                         accounting_mode=0,
+                         udps=None,
+                         n_dissections=20,
+                         statistical_analysis=False,
+                         splt_analysis=0,
+                         n_meters=0,
+                         performance_summary=False)
+```
 
-### Packet capture
-This step is performed on the Network Interface Card (NIC) level. After passing various checks such 
-as checksum error, packets stored in on-card reception buffers are moved to the hosting device memory. 
-Several libraries are available to capture network traffic such as libpcap for UNIX based operating systems Winpcap 
-for Windows. NFStream implementation is based on libpcap.
+### NFStreamer attributes
 
-### Truncation
-Defining a snapshot length, the process selects precise bytes from the packet. It is performed in some cases to reduce
-the amount of data captured and therefore CPU and bus bandwidth load.
- 
-### Timestamping
-As packets may come from several observation points, reordering process is based on packet’s timestamp. 
-While hardware timestamping provides a high accuracy up to 100 nanoseconds in case of the IEEE 1588 protocol, 
-it’s not supported by most of commodity NIC. NFStream is based on software timestamping which is widely used to outcome
- this lack providing milliseconds accuracy.
- 
-### Packet filtering
-Performs filtering of packets to separate packets having specific
-properties from those not having them. A packet is selected if some specific fields are
-equal or in the range of given values. NFStream packet filtering is based on BPF filtering syntax.
+| `source` | `[default=None]` | Packet capture source. Pcap file path or network interface name. |
+| `decode_tunnels` | `[default=True]` | Enable/Disable GTP/TZSP tunnels decoding. |
+| `bpf_filter` | `[default=None]` | Specify a [BPF filter][bpf] filter for filtering selected traffic.  |
+| `promiscuous_mode` | `[default=True]` | Enable/Disable promiscuous capture mode.  |
+| `snapshot_length` | `[default=1500]` | Control packet slicing size (truncation) in bytes.  |
+| `idle_timeout` | `[default=30]` | Flows that are idle (no packets received) for more than this value in seconds will be exported. |
+| `active_timeout` | `[default=300]` | Flows that are active for more than this value in seconds will be exported.  |
+| `accounting_mode` | `[default=0]` | Specify the accounting mode that will be used to report bytes related features (0: ethernet, 1: ip, 2: transport, 3:payload).  |
+| `udps` | `[default=None]` | Specify user defined NFPlugins used to extend NFStreamer. |
+| `n_dissections` | `[default=20]` | Number of per flow packets to dissect for L7 visibility feature. When set to 0, L7 visibility feature is disabled. |
+| `statistical_analysis` | `[default=False]` | Enable/Disable post-mortem flow statistical analysis.  |
+| `splt_analysis` | `[default=0]` | Specify the sequence of first packets length for early statistical analysis. When set to 0, splt_analysis is disabled. |
+| `n_meters` | `[default=0]` | Specify the number of parallel metering processes. When set to 0, NFStreamer will automatically scale metering according to available physical cores on the running host. |
+| `performance_summary` | `[default=false]` | Enable/Disable printing performance summary. |
 
-### NFPacket
-In addition to these steps, NFObserver parses the packet in order to extract a set of informations (IP and 
-transport levels mainly) and share it with the upper layer using **NFPacket** object.
+### NFStreamer methods
 
-| `time` | `int`  | Packet timestamp in milliseconds |
-| `raw_size` | `int`  | Packet raw size |
-| `ip_size` | `int`  | IP packet size |
-| `transport_size` | `int`  | Transport packet size |
-| `payload_size` | `int`  | Packet payload size |
+#### \_\_iter__()
+
+```python
+for flow in my_streamer:
+   print(flow) # or whatever
+```
+
+#### to_pandas(ip_anonymization=False)
+
+```python
+my_dataframe = my_streamer.to_pandas(ip_anonymization=False)
+my_dataframe.head()
+```
+
+| `ip_anonymization` | `[default=False]` | Enable/Disable IP anonymization. IP anonymization is based on a random secret key generation at each start of NFStreamer. The generated key is used to anonymize IP source and IP destination fields using blake2b algorithm. |
+
+#### to_csv(path=None, ip_anonymization=False, flows_per_file=0)
+
+```python
+total_flows_count = my_streamer.to_csv(path=None, ip_anonymization=False, flows_per_file=0)
+```
+
+| `path` | `[default=None]` | Specify output path of csv resulting file. When Set to None, NFStream uses source as path and add a '.csv' extension to it. |
+| `flows_per_file` | `[default=0]` | Specify maximum flows per generated file. Each generated file name will be appended by the chunk index. This limit is disabled when set to 0. |
+| `ip_anonymization` | `[default=False]` | Enable/Disable IP anonymization. IP anonymization is based on a random secret key generation at each start of NFStreamer. The generated key is used to anonymize IP source and IP destination fields using blake2b algorithm. |
+
+## NFlow
+
+NFlow is the flow represention within NFStream. It contains all computed flow features accoring to NFStreamer configuration.
+In the following we detail each implemented feature.
+
+#### NFlow Core Features
+
+| `id` | `int`  | Flow identifier |
+| `expiration_id` | `int`  | Identifier of flow expiration trigger. Can be 0 for idle_timeout, 1 for active_timeout or -1 for custom expiration |
 | `src_ip` | `str`  | Source IP address string representation |
-| `dst_ip` | `str`  | Destination IP address string representation|
+| `src_ip_is_private` | `str`  | Source IP address type (1 if private, else 0) |
 | `src_port` | `int`  | Transport layer source port |
+| `dst_ip` | `str`  | Destination IP address string representation |
+| `dst_ip_is_private` | `str`  | Destination IP address type (1 if private, else 0) |
 | `dst_port` | `int`  | Transport layer destination port |
 | `protocol` | `int`  | Transport layer protocol |
+| `ip_version` | `int`  | IP version |
 | `vlan_id` | `int`  | Virtual LAN identifier |
-| `version` | `int`  | IP version |
-| `tcp_flags` | `namedtuple`  | Packet observed TCP flags |
-| `ip_packet` | `bytes`  | Raw content starting from IP Header |
-| `direction` | `int`  | Packet direction: 0 for src_to_dst and 1 for dst_to_src |
+| `bidirectional_first_seen_ms` | `int`  | Timestamp in milliseconds on first flow bidirectional packet |
+| `bidirectional_last_seen_ms` | `int`  | Timestamp in milliseconds on last flow bidirectional packet  |
+| `bidirectional_duration_ms` | `int`  | Flow bidirectional duration in milliseconds |
+| `bidirectional_packets` | `int`  | Flow bidirectional packets accumulator |
+| `bidirectional_bytes` | `int`  | Flow bidirectional bytes accumulator (depends on accounting_mode) |
+| `src2dst_first_seen_ms` | `int`  | Timestamp in milliseconds on first flow src2dst packet |
+| `src2dst_last_seen_ms` | `int`  | Timestamp in milliseconds on last flow src2dst packet  |
+| `src2dst_duration_ms` | `int`  | Flow src2dst duration in milliseconds |
+| `src2dst_packets` | `int`  | Flow src2dst packets accumulator |
+| `src2dst_bytes` | `int`  | Flow src2dst bytes accumulator (depends on accounting_mode) |
+| `dst2src_first_seen_ms` | `int`  | Timestamp in milliseconds on first flow dst2src packet |
+| `dst2src_last_seen_ms` | `int`  | Timestamp in milliseconds on last flow dst2src packet  |
+| `dst2src_duration_ms` | `int`  | Flow dst2src duration in milliseconds |
+| `dst2src_packets` | `int`  | Flow dst2src packets accumulator |
+| `dst2src_bytes` | `int`  | Flow dst2src bytes accumulator (depends on accounting_mode) |
 
-## NFCache: The Flow Metering Layer
+#### NFlow Layer-7 Visibility Features (n_dissections>0)
 
-NFCache is the implementation of flow metering layer within a flow monitoring framework and performs currently
-the following steps.
-- Aggregate packet into flow.
-- Compute flow metrics.
-- Manage flow expiration. 
+| `application_name` | `str`  | nDPI detected application name. |
+| `application_category_name` | `str`  | nDPI detected application category name. |
+| `application_is_guessed` | `int`  | Indicates if detection result is based on pure dissection or port_based guess. |
+| `requested_server_name` | `str`  | Requested server name (SSL/TLS, DNS, HTTP). |
+| `client_fingerprint` | `str`  | Client fingerprint (DHCP fingerprint for DHCP, [JA3][ja3] for SSL/TLS and [HASSH][hassh] for SSH). |
+| `server_fingerprint` | `str`  | Server fingerprint ([JA3][ja3] for SSL/TLS and [HASSH][hassh] for SSH). |
+| `http_user_agent` | `str`  | Extracted HTTP user agent. |
+| `http_content_type` | `str`  | Extracted HTTP content type. |
 
-### NFEntry Cache
-NFEntry Cache consist of a fixed set of LRU caches in which the metering process stores information 
-regarding active flows. 
-A computed hash (IP source and destination addresses, source and destination ports, protocol and the VLAN identifier) 
-determines whether NFPacket is matching an existing NFEntry in the cache or not. 
-In the first case, flow metrics are updated. 
-In the latter one, a new flow is created. 
-We define a flow as bidirectional when we consider a pair of IP adresses/Transport ports and it reverse belongs to 
-same flow.
+#### Post-Mortem Statistical Features (statistical_analysis=True)
 
-### Expiration Manager
-NFCache entries are cached until they are considered as terminated. Termination of a flow is triggered by an 
-expiration rule. Currently, the expiration manager consider a flow as expired based on:
+| `bidirectional_min_ps` | `int`  | Flow bidirectional minimum packet size (depends on accounting_mode).|
+| `bidirectional_mean_ps` | `float`  | Flow bidirectional mean packet size (depends on accounting_mode).|
+| `bidirectional_stdev_ps` | `float`  | Flow bidirectional packet size sample standard deviation (depends on accounting_mode).|
+| `bidirectional_max_ps` | `int`  | Flow bidirectional maximum packet size (depends on accounting_mode).|
+| `src2dst_min_ps` | `int`  | Flow src2dst minimum packet size (depends on accounting_mode).|
+| `src2dst_mean_ps` | `float`  | Flow src2dst mean packet size (depends on accounting_mode).|
+| `src2dst_stdev_ps` | `float`  | Flow src2dst packet size sample standard deviation (depends on accounting_mode).|
+| `src2dst_max_ps` | `int`  | Flow src2dst maximum packet size (depends on accounting_mode).|
+| `dst2src_min_ps` | `int`  | Flow dst2src minimum packet size (depends on accounting_mode).|
+| `dst2src_mean_ps` | `float`  | Flow dst2src mean packet size (depends on accounting_mode).|
+| `dst2src_stdev_ps` | `float`  | Flow dst2src packet size sample standard deviation (depends on accounting_mode).|
+| `dst2src_max_ps` | `int`  | Flow dst2src maximum packet size (depends on accounting_mode).|
+| `bidirectional_min_piat_ms` | `int`  | Flow bidirectional minimum packet inter arrival time.|
+| `bidirectional_mean_piat_ms` | `float`  | Flow bidirectional mean packet inter arrival time.|
+| `bidirectional_stdev_piat_ms` | `float`  | Flow bidirectional packet inter arrival time sample standard deviation.|
+| `bidirectional_max_piat_ms` | `int`  | Flow bidirectional maximum packet inter arrival time.|
+| `src2dst_min_piat_ms` | `int`  | Flow src2dst minimum packet inter arrival time.|
+| `src2dst_mean_piat_ms` | `float`  | Flow src2dst mean packet inter arrival time.|
+| `src2dst_stdev_piat_ms` | `float`  | Flow src2dst packet inter arrival time sample standard deviation.|
+| `src2dst_max_piat_ms` | `int`  | Flow src2dst maximum packet inter arrival time.|
+| `dst2src_min_piat_ms` | `int`  | Flow dst2src minimum packet inter arrival time.|
+| `dst2src_mean_piat_ms` | `float`  | Flow dst2src mean packet inter arrival time.|
+| `dst2src_stdev_piat_ms` | `float`  | Flow dst2src packet inter arrival time sample standard deviation.|
+| `dst2src_max_piat_ms` | `int`  | Flow dst2src maximum packet inter arrival time.|
+| `bidirectional_syn_packets` | `int`  | Flow bidirectional syn packet accumulators.|
+| `bidirectional_cwr_packets` | `int`  | Flow bidirectional cwr packet accumulators.|
+| `bidirectional_ece_packets` | `int`  | Flow bidirectional ece packet accumulators.|
+| `bidirectional_urg_packets` | `int`  | Flow bidirectional urg packet accumulators.|
+| `bidirectional_ack_packets` | `int`  | Flow bidirectional ack packet accumulators.|
+| `bidirectional_psh_packets` | `int`  | Flow bidirectional psh packet accumulators.|
+| `bidirectional_rst_packets` | `int`  | Flow bidirectional rst packet accumulators.|
+| `bidirectional_fin_packets` | `int`  | Flow bidirectional fin packet accumulators.|
+| `src2dst_syn_packets` | `int`  | Flow src2dst syn packet accumulators.|
+| `src2dst_cwr_packets` | `int`  | Flow src2dst cwr packet accumulators.|
+| `src2dst_ece_packets` | `int`  | Flow src2dst ece packet accumulators.|
+| `src2dst_urg_packets` | `int`  | Flow src2dst urg packet accumulators.|
+| `src2dst_ack_packets` | `int`  | Flow src2dst ack packet accumulators.|
+| `src2dst_psh_packets` | `int`  | Flow src2dst psh packet accumulators.|
+| `src2dst_rst_packets` | `int`  | Flow src2dst rst packet accumulators.|
+| `src2dst_fin_packets` | `int`  | Flow src2dst fin packet accumulators.|
+| `dst2src_syn_packets` | `int`  | Flow dst2src syn packet accumulators.|
+| `dst2src_cwr_packets` | `int`  | Flow dst2src cwr packet accumulators.|
+| `dst2src_ece_packets` | `int`  | Flow dst2src ece packet accumulators.|
+| `dst2src_urg_packets` | `int`  | Flow dst2src urg packet accumulators.|
+| `dst2src_ack_packets` | `int`  | Flow dst2src ack packet accumulators.|
+| `dst2src_psh_packets` | `int`  | Flow dst2src psh packet accumulators.|
+| `dst2src_rst_packets` | `int`  | Flow dst2src rst packet accumulators.|
+| `dst2src_fin_packets` | `int`  | Flow dst2src fin packet accumulators.|
 
-- Active timeout: Flow expires after being considered active during a certain period.
-- Idle timeout: Flow expires if no packets belonging to it are observed during a specific period.
-- Custom expiration: User defined rule.
+#### Early Statistical Features (splt_analysis>0)
 
-It is possible to configure our metering process based on expiration policy to reduce the amount of records exported.
+| `splt_direction` | `list`  | List of N (splt_analysis=N) first flow packet directions (0: src2dst, 1: dst2src, -1:no packet).|
+| `splt_ps` | `list`  | List of N (splt_analysis=N) first flow packet sizes (depends on accounting_mode, -1 when there is no packet).|
+| `splt_piat_ms` | `list`  | List of N (splt_analysis=N) first flow packet inter arrival times (always 0 for first packet, -1 when there is no packet).|
 
+## NFPlugin
 
-### NFPlugin
+### NFPlugin prototype
 
-A flow in NFStream is defined as an **NFEntry**. NFEntry is defined as a set of **NFPlugins** outputs. Each time 
-a flow is created, updated or expired, a set of NFPlugins perform the required computations.
+NFPlugin is the main class for extending NFStream. It can be used for the following use cases:
+* Changing the expiration logic of NFStream with custom expiration.
+* Create a set of new NFlow features.
+* Deploy Machine Learning Models
+
+In the following, we provide the prototype of NFPlugin class that your plugin must inherit from.
 
 ```python
 class NFPlugin(object):
-    def __init__(self, name=None, volatile=False, user_data=None):
+    """ NFPlugin class: Main entry point to extend NFStream """
+    def __init__(self, **kwargs):
         """
         NFPlugin Parameters:
-        name [default= class name]: Plugin name. Must be unique as it’s dynamically created 
-                                    as a flow attribute.
-        volatile [default= False] : Volatile plugin is available only when flow is processed.
-                                    At flow expiration level, plugin is automatically removed
-                                    (will not appear as flow attribute).
-        user_data [default= None] : user_data passed to the plugin. Example: external module,
-                                    pickled sklearn model, etc.
+        kwargs : user defined named arguments that will be stored as Plugin attributes
         """
-    def on_init(self, obs):
-        """
-        on_init(self, obs): Method called at entry creation. When aggregating packets into 
-                            flows, this method is called on NFEntry object creation based on
-                            first NFPacket object belonging to it.
-        """
-        return 0
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
-    def on_update(self, obs, entry):
+    def on_init(self, packet, flow):
         """
-        on_update(self, obs, entry): Method called to update each entry with its belonging obs. 
-                                     When aggregating packets into flows, the entry is an NFEntry
-                                     object and the obs is an NFPacket object.
+        on_init(self, packet, flow): Method called at flow creation.
+        You must initiate your udps values if you plan to compute ones.
+        Example: -------------------------------------------------------
+                 flow.udps.magic_message = "NO"
+                 if packet.raw_size == 40:
+                    flow.udps.packet_40_count = 1
+                 else:
+                    flow.udps.packet_40_count = 0
+        ----------------------------------------------------------------
         """
         pass
 
-    def on_expire(self, entry):
+    def on_update(self, packet, flow):
         """
-        on_expire(self, entry):      Method called at entry expiration. When aggregating packets
-                                     into flows, the entry is an NFEntry
+        on_update(self, packet, flow): Method called to update each flow 
+                                       with its belonging packet.
+        Example: -------------------------------------------------------
+                 if packet.raw_size == 40:
+                    flow.udps.packet_40_count += 1
+        ----------------------------------------------------------------
+        """
+        pass
+
+    def on_expire(self, flow):
+        """
+        on_expire(self, flow):      Method called at flow expiration.
+        Example: -------------------------------------------------------
+                 if flow.udps.packet_40_count >= 10:
+                    flow.udps.magic_message = "YES"
+        ----------------------------------------------------------------
         """
         pass
 
     def cleanup(self):
         """
         cleanup(self):               Method called for plugin cleanup.
+        Example: -------------------------------------------------------
+                 del self.large_dict_passed_as_plugin_attribute
+        ----------------------------------------------------------------
         """
         pass
 ```
 
-### NFEntry
+### NFPacket object
 
-NFEntry is built using a set of core NFPlugins and extensible using user defined NFPlugins. The core 
-implemented non volatile NFPlugins output construct the **NFEntry** exposed by NFCache.
+As you may noticed, NFPlugin on_init and on_update are called to initiate/update flows with its belonging set of packets.
+When calling these entry points NFStream already matched the packet to its flow and preprocessed its information. Packet
+information are exposed in an NFPacket (Network Flow Packet) which contains the following attributes:
 
-#### Core Features
+| `time` | `int`  | Packet timestamp in milliseconds. |
+| `delta_ime` | `int`  | Delta time in milliseconds with previous flow packet. |
+| `raw_size` | `int`  | Link layer packet size. |
+| `ip_size` | `int`  | IP packet size. |
+| `transport_size` | `int`  | Transport packet size. |
+| `payload_size` | `int`  | Packet payload size. |
+| `src_ip` | `str`  | Source IP address string representation. |
+| `dst_ip` | `str`  | Destination IP address string representation. |
+| `src_port` | `int`  | Transport layer source port. |
+| `dst_port` | `int`  | Transport layer destination port. |
+| `protocol` | `int`  | Transport layer protocol. |
+| `vlan_id` | `int`  | Virtual LAN identifier. |
+| `ip_version` | `int`  | IP version. |
+| `ip_packet` | `bytes`  | Raw content starting from IP Header. |
+| `direction` | `int`  | Packet direction: 0 for src_to_dst and 1 for dst_to_src. |
+| `syn` | `bool`  | TCP SYN Flag present. |
+| `cwr` | `bool`  | TCP CWR Flag present. |
+| `ece` | `bool`  | TCP ECE Flag present. |
+| `urg` | `bool`  | TCP URG Flag present. |
+| `ack` | `bool`  | TCP ACK Flag present. |
+| `psh` | `bool`  | TCP PSH Flag present. |
+| `rst` | `bool`  | TCP RST Flag present. |
+| `fin` | `bool`  | TCP FIN Flag present. |
 
-| `id` | `int`  | Flow identifier |
-| `bidirectional_first_seen_ms` | `int`  | Timestamp in milliseconds on first flow bidirectional packet |
-| `bidirectional_last_seen_ms` | `int`  | Timestamp in milliseconds on last flow bidirectional packet  |
-| `src2dst_first_seen_ms` | `int`  | Timestamp in milliseconds on first flow src2dst packet |
-| `src2dst_last_seen_ms` | `int`  | Timestamp in milliseconds on last flow src2dst packet  |
-| `dst2src_first_seen_ms` | `int`  | Timestamp in milliseconds on first flow dst2src packet |
-| `dst2src_last_seen_ms` | `int`  | Timestamp in milliseconds on last flow dst2src packet  |
-| `version` | `int`  | IP version |
-| `src_port` | `int`  | Transport layer source port |
-| `dst_port` | `int`  | Transport layer destination port |
-| `protocol` | `int`  | Transport layer protocol |
-| `vlan_id` | `int`  | Virtual LAN identifier |
-| `src_ip` | `str`  | Source IP address string representation |
-| `dst_ip` | `str`  | Destination IP address string representation |
-| `bidirectional_packets` | `int`  | Flow bidirectional packets accumulator |
-| `bidirectional_raw_bytes` | `int`  | Flow bidirectional raw bytes accumulator |
-| `bidirectional_ip_bytes` | `int`  | Flow bidirectional IP bytes accumulator |
-| `bidirectional_duration_ms` | `int`  | Flow bidirectional duration in milliseconds |
-| `src2dst_packets` | `int`  | Flow src2dst packets accumulator |
-| `src2dst_raw_bytes` | `int`  | Flow src2dst raw bytes accumulator |
-| `src2dst_ip_bytes` | `int`  | Flow src2dst IP bytes accumulator |
-| `src2dst_duration_ms` | `int`  | Flow src2dst duration in milliseconds |
-| `dst2src_packets` | `int`  | Flow dst2src packets accumulator |
-| `dst2src_raw_bytes` | `int`  | Flow dst2src raw bytes accumulator |
-| `dst2src_ip_bytes` | `int`  | Flow dst2src IP bytes accumulator |
-| `dst2src_duration_ms` | `int`  | Flow dst2src duration in milliseconds |
-| `expiration_id` | `int`  | Identifier of flow expiration trigger. Can be 0 for idle_timeout, 1 for active_timeout or negative for custom expiration |
+### NFPlugins Examples
 
-#### Statistical Features
+#### Flow Slicer
 
-| `bidirectional_min_raw_ps` | `int`  | Flow bidirectional minimum raw packet size |
-| `bidirectional_mean_raw_ps` | `float`  | Flow bidirectional mean raw packet size |
-| `bidirectional_stdev_raw_ps` | `float`  | Flow bidirectional raw packet size standard deviation (sample stddev) |
-| `bidirectional_max_raw_ps` | `int`  | Flow bidirectional maximum raw packet size |
-| `src2dst_min_raw_ps` | `int`  | Flow src2dst minimum raw packet size |
-| `src2dst_mean_raw_ps` | `float`  | Flow src2dst mean raw packet size |
-| `src2dst_stdev_raw_ps` | `float`  | Flow src2dst raw packet size standard deviation (sample stddev) |
-| `src2dst_max_raw_ps` | `int`  | Flow src2dst maximum raw packet size |
-| `dst2src_min_raw_ps` | `int`  | Flow dst2src minimum raw packet size |
-| `dst2src_mean_raw_ps` | `float`  | Flow dst2src mean raw packet size |
-| `dst2src_stdev_raw_ps` | `float`  | Flow dst2src raw packet size standard deviation (sample stddev) |
-| `dst2src_max_raw_ps` | `int`  | Flow dst2src maximum raw packet size |
-| `bidirectional_min_ip_ps` | `int`  | Flow bidirectional minimum ip packet size |
-| `bidirectional_mean_ip_ps` | `float`  | Flow bidirectional mean ip packet size |
-| `bidirectional_stdev_ip_ps` | `float`  | Flow bidirectional ip packet size standard deviation (sample stddev) |
-| `bidirectional_max_ip_ps` | `int`  | Flow bidirectional maximum ip packet size |
-| `src2dst_min_ip_ps` | `int`  | Flow src2dst minimum ip packet size |
-| `src2dst_mean_ip_ps` | `float`  | Flow src2dst mean ip packet size |
-| `src2dst_stdev_ip_ps` | `float`  | Flow src2dst ip packet size standard deviation (sample stddev) |
-| `src2dst_max_ip_ps` | `int`  | Flow src2dst maximum ip packet size |
-| `dst2src_min_ip_ps` | `int`  | Flow dst2src minimum ip packet size |
-| `dst2src_mean_ip_ps` | `float`  | Flow dst2src mean ip packet size |
-| `dst2src_stdev_ip_ps` | `float`  | Flow dst2src ip packet size standard deviation (sample stddev) |
-| `dst2src_max_ip_ps` | `int`  | Flow dst2src maximum ip packet size |
-| `bidirectional_min_piat_ms` | `float`  | Flow bidirectional minimum packet inter arrival time |
-| `bidirectional_mean_piat_ms` | `float`  | Flow bidirectional mean packet inter arrival time |
-| `bidirectional_stdev_piat_ms` | `float`  | Flow bidirectional packet inter arrival time standard deviation (sample stddev) |
-| `bidirectional_max_piat_ms` | `float`  | Flow bidirectional maximum packet inter arrival time |
-| `src2dst_min_piat_ms` | `float`  | Flow src2dst minimum packet inter arrival time |
-| `src2dst_mean_piat_ms` | `float`  | Flow src2dst mean packet inter arrival time |
-| `src2dst_stdev_piat_ms` | `float`  | Flow src2dst packet inter arrival time standard deviation (sample stddev) |
-| `src2dst_max_piat_ms` | `float`  | Flow src2dst maximum packet inter arrival time |
-| `dst2src_min_piat_ms` | `float`  | Flow dst2src minimum packet inter arrival time |
-| `dst2src_mean_piat_ms` | `float`  | Flow dst2src mean packet inter arrival time |
-| `dst2src_stdev_piat_ms` | `float`  | Flow dst2src packet inter arrival time standard deviation (sample stddev) |
-| `dst2src_max_piat_ms` | `float`  | Flow dst2src maximum packet inter arrival time |
-| `bidirectional_syn_packets` | `int`  | Flow bidirectional syn packet accumulators |
-| `bidirectional_cwr_packets` | `int`  | Flow bidirectional cwr packet accumulators |
-| `bidirectional_ece_packets` | `int`  | Flow bidirectional ece packet accumulators |
-| `bidirectional_urg_packets` | `int`  | Flow bidirectional urg packet accumulators |
-| `bidirectional_ack_packets` | `int`  | Flow bidirectional ack packet accumulators |
-| `bidirectional_psh_packets` | `int`  | Flow bidirectional psh packet accumulators |
-| `bidirectional_rst_packets` | `int`  | Flow bidirectional rst packet accumulators |
-| `bidirectional_fin_packets` | `int`  | Flow bidirectional fin packet accumulators |
-| `src2dst_syn_packets` | `int`  | Flow src2dst syn packet accumulators |
-| `src2dst_cwr_packets` | `int`  | Flow src2dst cwr packet accumulators |
-| `src2dst_ece_packets` | `int`  | Flow src2dst ece packet accumulators |
-| `src2dst_urg_packets` | `int`  | Flow src2dst urg packet accumulators |
-| `src2dst_ack_packets` | `int`  | Flow src2dst ack packet accumulators |
-| `src2dst_psh_packets` | `int`  | Flow src2dst psh packet accumulators |
-| `src2dst_rst_packets` | `int`  | Flow src2dst rst packet accumulators |
-| `src2dst_fin_packets` | `int`  | Flow src2dst fin packet accumulators |
-| `dst2src_syn_packets` | `int`  | Flow dst2src syn packet accumulators |
-| `dst2src_cwr_packets` | `int`  | Flow dst2src cwr packet accumulators |
-| `dst2src_ece_packets` | `int`  | Flow dst2src ece packet accumulators |
-| `dst2src_urg_packets` | `int`  | Flow dst2src urg packet accumulators |
-| `dst2src_ack_packets` | `int`  | Flow dst2src ack packet accumulators |
-| `dst2src_psh_packets` | `int`  | Flow dst2src psh packet accumulators |
-| `dst2src_rst_packets` | `int`  | Flow dst2src rst packet accumulators |
-| `dst2src_fin_packets` | `int`  | Flow dst2src fin packet accumulators |
+In the following, we implement a flow slicer NFPlugin, that will force NFStream to expire each flow that reaches a 
+packet count limit.
 
-#### Application Identification Features
-
-| `master_protocol`           | `int`  | nDPI master protocol identifier |
-| `app_protocol`              | `int`  | nDPI app protocol identifier |
-| `application_name`          | `str`  | nDPI application name |
-| `category_name`             | `str`  | nDPI application category name |
-| `client_info`               | `str`  | Dissected client informations. Can be http_detected_os for HTTP, client_signature for SSH or client_requested_server_name for SSL |
-| `server_info`               | `str`  | Dissected server informations. Can be host_server_name for HTTP or DNS, server_signature for SSH or server_names for SSL |
-| `j3a_client`                | `str`  | J3A client fingerprint |
-| `j3a_server`                | `str`  | J3A server fingerprint |
-
-
-## NFStreamer: The Export Layer
-
-NFStreamer is the main class of NFStream framework and implements also the export layer within a flow monitoring schema.
 ```python
-my_capture_streamer = NFStreamer(source="facebook.pcap", # or live interface
-                                 snaplen=65535,
-                                 idle_timeout=30,
-                                 active_timeout=300,
-                                 plugins=(),
-                                 dissect=True,
-                                 max_tcp_dissections=10,
-                                 max_udp_dissections=16,
-                                 statistics=False,
-                                 enable_guess=True,
-                                 decode_tunnels=True,
-                                 bpf_filter=None,
-                                 promisc=True
-)
+from nfstream import NFStreamer, NFPlugin
 
-"""
-NFStreamer Parameters:
-        source [default= None]:                   Source of packets.
-                                                  Can be live_interface_name or pcap_file_path.
-        snaplen [default= 65535]:                 Packet capture length.
-        idle_timeout [default= 30]:               Flows that are inactive for more than this 
-                                                  value in seconds will be exported.
-        active_timeout [default= 300]:            Flows that are active for more than this
-                                                  value in seconds will be exported.
-        plugins [default= ()]:                    Set of user defined NFPlugins.
-        dissect [default= True]:                  Enable nDPI deep packet inspection library
-                                                  for Layer 7 visibility.
-        max_tcp_dissections [default= 10]:        Maximum per flow TCP packets to dissect
-                                                  (ignored when dissect=False).
+class FlowSlicer(NFPlugin):
+    def on_init(self, packet, flow):
+        if self.limit == 1:
+           flow.expiration_id = -1 
 
-        max_udp_dissections [default= 16]:        Maximum per flow UDP packets to dissect 
-                                                  (ignored when dissect=False).
-        statistics [default= False]:              Enable statistical flow features extraction.
-        enable_guess [default= True]:             Enable/Disable identification engine port
-                                                  guess heuristic.
-        decode_tunnels [default= True]:          Enable/Disable GTP/TZSP tunnels dissection.
-        bpf_filter [default= None]:               Specify a BPF filter for filtering selected 
-                                                  traffic
-        promisc [default= True]:                  Enable/Disable promiscuous capture mode.
-"""
+    def on_update(self, packet, flow):
+        if self.limit == flow.bidirectional_packets:
+           flow.expiration_id = -1 # -1 value force expiration
+
+
+streamer = NFStreamer(source="eth0", udps=FlowSlicer(limit=7))
+# Iterate, convert it to pandas or csv.
 ```
 
-You can iterate over a streamer
+#### SPLT reimplementation
+
+In the following, we reimplement splt analysis that is provided within NFStream as an NFPlugin (for demo purpose).
+
 ```python
-for flow in my_capture_streamer:
-    print(flow)  # print it.
-    print(flow.to_namedtuple()) # convert it to a named tuple.
-    print(flow.to_json()) # convert it to json.
-    print(flow.keys()) # get flow keys.
-    print(flow.values()) # get flow values.
-```
-or convert it to a pandas Dataframe.
-```python
-df = my_capture_streamer.to_pandas(ip_anonymization=False)
-df.head(5)
-```
-or convert it to a csv file.
-```python
-total_flows_rows = my_capture_streamer.csv(path="output.csv",
-                                           sep="|",
-                                           ip_anonymization=False)
+from nfstream import NFStreamer, NFPlugin
+
+class SPLT(NFPlugin):
+    """
+    Reimplementation of SPLT native analysis as NFPlugin: For demo purposes.
+    SPLT: Sequence of packet length and time analyzer.
+    This plugin will take 2 arguments:
+        - sequence_length: determines the maximum sequence length (number of packets to analyze)
+        - accounting_mode: Set how packet size will be reported (0: raw_size,
+                                                                 1: ip_size,
+                                                                 2: transport_size,
+                                                                 3: payload_size)
+    Plugin will generate 3 new metrics as follows:
+    - splt_directions: Array with direction of each packet (0: src_to_dst, 1:dst_to_src)
+    - splt_ps: Array with packet size in bytes according to accounting_mode value.
+    - splt_ipt: Array with inter packet arrival time in milliseconds.
+    Note: Tail will be set with default value -1.
+    """
+    @staticmethod
+    def _get_packet_size(packet, accounting_mode):
+        if accounting_mode == 0:
+            return packet.raw_size
+        elif accounting_mode == 1:
+            return packet.ip_size
+        elif accounting_mode == 2:
+            return packet.transport_size
+        else:
+            return packet.payload_size
+
+    def on_init(self, packet, flow):
+        flow.udps.splt_direction = [-1] * self.sequence_length
+        flow.udps.splt_direction[0] = 0  # First packet so  src->dst
+        flow.udps.splt_ps = [-1] * self.sequence_length
+        flow.udps.splt_ps[0] = self._get_packet_size(packet, self.accounting_mode)
+        flow.udps.splt_piat_ms = [-1] * self.sequence_length
+        flow.udps.splt_piat_ms[0] = packet.delta_time
+
+    def on_update(self, packet, flow):
+        if flow.bidirectional_packets <= self.sequence_length:
+            packet_index = flow.bidirectional_packets - 1
+            flow.udps.splt_direction[packet_index] = packet.direction
+            flow.udps.splt_ps[packet_index] = self._get_packet_size(packet, self.accounting_mode)
+            flow.udps.splt_piat_ms[packet_index] = packet.delta_time
+
+
+streamer = NFStreamer(source="facebook.pcap", udps=SPLT(sequence_length=7, accouncting_mode=1))
+for flow in streamer: # Work also with to_pandas, to_csv
+   print(flow.udps.splt_direction)
 ```
 
+#### Machine Learning Model: Train and Deploy
+
+In the the following, we demonstrate a simplistic machine learning approach training and deployment.
+We suppose that we want to run a classification of Social Network category flows based on bidirectional_packets and 
+bidirectional_bytes as features. For the sake of brevity, we decide to predict only at flow expiration stage.
+
+##### Training the model
+
+```python
+from nfstream import NFPlugin, NFStreamer
+from sklearn.ensemble import RandomForestClassifier
+
+df = NFStreamer(source="training_traffic.pcap").to_pandas()
+X = df[["bidirectional_packets", "bidirectional_bytes"]]
+y = df["application_category_name"].apply(lambda x: 1 if 'SocialNetwork' in x else 0)
+model = RandomForestClassifier()
+model.fit(X, y)
+```
+
+##### ML powered streamer on live traffic
+
+```python
+import numpy
+
+class ModelPrediction(NFPlugin):
+    def on_init(self, packet, flow):
+        flow.udps.model_prediction = 0
+    def on_expire(self, flow):
+        # You can do the same in on_update entrypoint and force expiration with custom id. 
+        to_predict = numpy.array([flow.bidirectional_packets,
+                                  flow.bidirectional_bytes]).reshape((1,-1))
+        flow.udps.model_prediction = self.my_model.predict(to_predict)
+
+ml_streamer = NFStreamer(source="eth0", udps=ModelPrediction(my_model=model))
+for flow in ml_streamer:
+    print(flow.udps.model_prediction)
+```
+
+[bpf]: https://biot.com/capstats/bpf.html
+[ja3]: https://github.com/salesforce/ja3
+[hassh]: https://github.com/salesforce/hassh

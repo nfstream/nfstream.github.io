@@ -9,8 +9,8 @@ nav_exclude: true
     <meta name="image" property="og:image" content="https://www.nfstream.org/resources/preview.png">
     <div class="lp-center">
       <h1 style="font-weight: bold">NFStream: Flexible Network Data Analysis Framework</h1>
-      <h2 style="padding-bottom: 30px">NFStream is a Python package providing fast, flexible, and expressive data structures
-        designed to make working with online or offline network data both easy and intuitive.</h2>
+      <h2 style="padding-bottom: 30px">NFStream is a Python framework providing fast, flexible, and expressive data structures designed
+        to make working with online or offline network data both easy and intuitive.</h2>
       <a href="https://mybinder.org/v2/gh/aouinizied/nfstream-tutorials/master?filepath=demo_notebook.ipynb" class="btn btn-blue fs-5 mb-3 mb-md-5 mr-5">Live Notebook</a>
       <a href="{{ site.baseurl }}/docs/" class="btn btn-blue fs-5 mb-3 mb-md-5">Get Started</a>
     </div>
@@ -18,10 +18,11 @@ nav_exclude: true
   <section class="lp-section">
     <div class="lp-center lp-section-container">
       <div class="lp-col lp-col-left">
-        <h2>Identify hundreds of applications</h2>
-        <p>NFStream deep packet inspection engine is based on nDPI. It allows NFStream to perform <a href="http://people.ac.upc.edu/pbarlet/papers/ground-truth.pam2014.pdf">reliable</a> encrypted applications identification and metadata extraction.
+        <h2>Encrypted layer-7 visibility</h2>
+        <p> NFStream deep packet inspection is based on nDPI. It allows NFStream to perform reliable encrypted
+          applications identification and metadata fingerprinting (e.g. TLS, SSH, DHCP, HTTP).
         </p>
-        <a href="{{ site.baseurl }}/docs/visibility" class="btn btn-blue fs-5 mb-3 mb-md-5">Learn More</a>
+        <a href="{{ site.baseurl }}/docs/api#nflow-layer-7-visibility-features-n_dissections0" class="btn btn-blue fs-5 mb-3 mb-md-5">Learn More</a>
       </div>
       <div class="lp-col">
         <img src="{{ site.baseurl }}/resources/apps.png" class="lp-image"/>
@@ -31,23 +32,27 @@ nav_exclude: true
   <section class="lp-section lp-section-invert">
     <div class="lp-center lp-section-container">
       <div class="lp-col">
-          <h2>Aggregate your packets into flows</h2>
-          <p>Dealing with a big pcap file and just want to aggregate it as network flows? NFStream make this path easier
-            in few lines. NFStream extracts +90 flow features and can convert it directly to a pandas Dataframe or a CSV file.</p>
-          <a href="{{ site.baseurl }}/docs/api#nfstreamer-the-export-layer" class="btn btn-blue fs-5 mb-3 mb-md-5">Learn More</a>
+          <h2>Network Flow aggregation and statistical features extraction</h2>
+          <p>Dealing with a big pcap file (or live network interface) and just want to aggregate it as network flows?
+            NFStream make this path easier in few lines. NFStream extracts statistical flow features and can convert
+            it directly to a Pandas dataframe or CSV file.</p>
+          <a href="{{ site.baseurl }}/docs/api#post-mortem-statistical-features-statistical_analysistrue" class="btn btn-blue fs-5 mb-3 mb-md-5">Learn More</a>
       </div>  
       <div class="lp-col lp-col-left">
 {% highlight python %}
-from nfstream import NFStreamer, NFPlugin
+from nfstream import NFStreamer
 
-my_online_streamer = NFStreamer(source="eth0")
-for flow in my_online_streamer:
+online_streamer = NFStreamer(source="eth0")
+for flow in online_streamer:
     print(flow)  # print it.
-    # Additional formats:flow.to_namedtuple(),flow.to_json()
-    #                    flow.keys(),flow.values()
 
-my_streamer = NFStreamer(source="tor.pcap", statistics=True)
-my_dataframe = my_streamer.to_pandas(ip_anonymization=False)
+offline_streamer = NFStreamer(source="tor.pcap",
+                              statistical_analysis=True,
+                              splt_analysis=10)
+
+df = offline_streamer.to_pandas(ip_anonymization=False)
+total_flows = offline_streamer.to_csv(flows_per_file=10000,
+                                      ip_anonymization=True)
 
 {% endhighlight %}
       </div>
@@ -56,22 +61,25 @@ my_dataframe = my_streamer.to_pandas(ip_anonymization=False)
   <section class="lp-section">
     <div class="lp-center lp-section-container">
       <div class="lp-col  lp-col-left">
-          <h2>Flexible and extensible</h2>
-          <p>Didn't find a specific flow feature? add a plugin to NFStream in few lines.</p>
+          <h2>Flexibility</h2>
+          <p> NFStream is easily extensible using NFPlugin. It allows to create a new feature within a few lines of
+            Python.</p>
           <a href="{{ site.baseurl }}/docs/api#nfplugin" class="btn btn-blue fs-5 mb-3 mb-md-5">Learn More</a>
       </div>
                   <div class="lp-col">
 {% highlight python %}
 
-class dst2src_ack_count(NFPlugin):
-   # We skip on_init as it will be set to 0 by default
-   def on_update(self, pkt, flow):
-   """flow update with each packet belonging to the flow"""
-      if pkt.tcpflags.ack == 1:
-         flow.dst2src_ack_count += 1
+from nfstream import NFPlugin, NFStreamer
 
-streamer_awesome = NFStreamer(source='devil.pcap',
-                              plugins=[dst2src_ack_count()])
+class FirstPacketIsSyn(NFPlugin):
+    def on_init(self, packet, flow):
+        flow.udps.first_pkt_is_syn = packet.syn
+
+streamer = NFStreamer(source='facebook.pcap',
+                      udps=FirstPacketIsSyn())
+
+for flow in extended_streamer:
+    print(flow.udps.first_pkt_is_syn)
 
 {% endhighlight %}
       </div>
@@ -81,9 +89,12 @@ streamer_awesome = NFStreamer(source='devil.pcap',
     <div class="lp-center lp-section-container">
       <div class="lp-col">
         <h2>Machine learning oriented</h2>
-        <p>Add your machine learning trained model as an NFPlugin in few lines.
+        <p> NFStream aims to make Machine Learning Approaches for network traffic management reproducible and
+          deployable. By using NFStream as a common framework, researchers ensure that models are trained using the
+          same feature computation logic and thus, a fair comparison is possible. Moreover, trained models can be
+          deployed and evaluated on live network using NFPlugins.
         </p>
-        <a href="{{ site.baseurl }}/docs/#start-your-ml-powered-streamer" class="btn btn-blue fs-5 mb-3 mb-md-5">Learn More</a>
+        <a href="{{ site.baseurl }}/docs/api#machine-learning-model-train-and-deploy" class="btn btn-blue fs-5 mb-3 mb-md-5">Learn More</a>
       </div>
       <div class="lp-col  lp-col-left">
         <img src="{{ site.baseurl }}/resources/mla.png" class="lp-image">
@@ -97,7 +108,7 @@ streamer_awesome = NFStreamer(source='devil.pcap',
         <p>NFStream is currently supported on major Linux distributions, MacOS and ARM (64bits) based platforms.
             You can install pre-built wheels for each platform using pip or build it from source.
         </p>
-        <a href="{{ site.baseurl }}/docs/installation" class="btn btn-blue fs-5 mb-3 mb-md-5">View Installation Guide</a>
+        <a href="{{ site.baseurl }}/docs/#installation-guide" class="btn btn-blue fs-5 mb-3 mb-md-5">View Installation Guide</a>
       </div>
       <div class="lp-col">
         <img src="{{ site.baseurl }}/resources/platforms.png" class="lp-image">
@@ -109,9 +120,9 @@ streamer_awesome = NFStreamer(source='devil.pcap',
       <div>
         <h3>Docs</h3>
         <ul>
-            <li><a href="{{ site.baseurl }}/docs/#usage-examples" class="lp-footer-item">Usage Examples</a></li>
-          <li><a href="{{ site.baseurl }}/docs/installation" class="lp-footer-item">Installation Guide</a></li>
+          <li><a href="{{ site.baseurl }}/docs/#installation-guide" class="lp-footer-item">Installation Guide</a></li>
           <li><a href="{{ site.baseurl }}/docs/api" class="lp-footer-item">API Documentation</a></li>
+          <li><a href="{{ site.baseurl }}/docs/datasets" class="lp-footer-item">Datasets</a></li>
         </ul>
       </div>
       <div>
