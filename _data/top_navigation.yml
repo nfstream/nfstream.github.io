@@ -1,5 +1,5 @@
 left_items:
-  - name: Docs
+  - name: Documentation
     link: /docs/
     external_link: false
   - name: Live Notebook

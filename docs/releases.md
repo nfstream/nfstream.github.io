@@ -15,13 +15,19 @@ This page contains NFStream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
-## Latest Official Release - v6.0.2
+## Latest Official Release - v6.0.3
 
-Release date: 2020-09-09 {% include new-release.html %}
+Release date: 2020-09-10 {% include new-release.html %}
+
+* Upgrade libpcap to 1.10.0.
+
+## v6.0.2
+
+Release date: 2020-09-09
 
 * Fix performance summary on live interface.
 
-## Latest Official Release - v6.0.0
+## v6.0.0
 
 Release date: 2020-09-09
 
@@ -35,7 +41,7 @@ Release date: 2020-09-09
 * Several bug fixes and improvements.
 * Major refactoring.
 
-## Latest Official Release - v5.2.0
+## v5.2.0
 
 Release date: 2020-07-18
 
@@ -43,7 +49,7 @@ Release date: 2020-07-18
 * Fix some minor issue with to_pandas() method.
 * Drop account_ip_padding_size option.
 
-## Latest Official Release - v5.1.6
+## v5.1.6
 
 Release date: 2020-07-11
 

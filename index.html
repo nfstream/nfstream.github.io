@@ -118,11 +118,13 @@ for flow in extended_streamer:
   <footer class="lp-footer">
     <div class="lp-footer-section lp-footer-grid">
       <div>
-        <h3>Docs</h3>
+        <h3>Documentation</h3>
         <ul>
           <li><a href="{{ site.baseurl }}/docs/#installation-guide" class="lp-footer-item">Installation Guide</a></li>
           <li><a href="{{ site.baseurl }}/docs/api" class="lp-footer-item">API Documentation</a></li>
           <li><a href="{{ site.baseurl }}/docs/datasets" class="lp-footer-item">Datasets</a></li>
+          <li><a href="{{ site.baseurl }}/docs/releases" class="lp-footer-item">Releases</a></li>
+          <li><a href="{{ site.baseurl }}/docs/license" class="lp-footer-item">License</a></li>
         </ul>
       </div>
       <div>
@@ -134,16 +136,16 @@ for flow in extended_streamer:
         </ul>
       </div>
       <div>
-        <h3>More</h3>
+        <h3>Supporting Organizations</h3>
         <ul>
-          <li><a href="{{ site.baseurl }}/docs/releases" class="lp-footer-item">Releases</a></li>
-          <li><a href="{{ site.baseurl }}/docs/license" class="lp-footer-item">License</a></li>
-          <li><a href="https://github.com/nfstream/nfstream.github.io" class="lp-footer-item">Website Repository</a></li>
+          <img src="{{ site.baseurl }}{{ site.logo_sah }}" width="{{ site.logo_width }}" height="57">
+          <img src="{{ site.baseurl }}{{ site.logo_tuke }}" width="{{ site.logo_width }}" height="57">
+          <img src="{{ site.baseurl }}{{ site.logo_ntop }}" width="{{ site.logo_width }}" height="57">
         </ul>
-      </div>  
+      </div>
     </div>
     <div class="lp-footer-section lp-footer-copyright">
-      <img src="{{ site.baseurl }}{{ site.logo_source }}" width="{{ site.logo_width }}" height="57">
+      <img src="{{ site.baseurl }}{{ site.logo_source }}" width="{{ site.logo_width }}" height="57" >
       <p>Copyright © {{ site.time | date: '%Y' }} NFStream Developers</p>
     </div>
   </footer>
