@@ -50,22 +50,76 @@ pip install nfstream
 
 ### Building NFStream from sources
 
-#### Linux
+#### Linux Prerequisites
 
 ```bash
 sudo apt-get update
-sudo apt-get install autoconf automake libtool pkg-config libpcap-dev flex bison
+sudo apt-get install autoconf automake libtool pkg-config flex bison gettext
 sudo apt-get install libusb-1.0-0-dev libdbus-glib-1-dev libbluetooth-dev libnl-genl-3-dev
-git clone https://github.com/nfstream/nfstream.git
-cd nfstream
-python3 -m pip install -r requirements.txt
-python3 setup.py bdist_wheel
 ```
 
-#### MacOS
+#### MacOS Prerequisites
 
 ```bash
-brew install autoconf automake libtool pkg-config
+brew install autoconf automake libtool pkg-config gettext
+```
+
+### Build Dependencies
+
+* [**libgpg-error**](https://github.com/gpg/libgpg-error)
+
+```bash
+git clone --branch libgpg-error-1.39 https://github.com/gpg/libgpg-error
+cd libgpg-error
+./autogen.sh
+./configure -enable-maintainer-mode --enable-static --enable-shared --with-pic --disable-doc --disable-nls
+make
+sudo make install
+cd ..
+rm -rf libgpg-error
+```
+
+* [**libgcrypt**](https://github.com/gpg/libgcrypt)
+
+```bash
+git clone --branch libgcrypt-1.8.6 https://github.com/gpg/libgcrypt
+cd libgcrypt
+./autogen.sh
+./configure -enable-maintainer-mode --enable-static --enable-shared --with-pic --disable-doc
+make
+sudo make install
+cd ..
+rm -rf libgcrypt
+```
+
+* [**libpcap**](https://github.com/the-tcpdump-group/libpcap)
+
+```bash
+git clone --branch libpcap-1.10.0-bp https://github.com/the-tcpdump-group/libpcap.git
+cd libpcap
+./configure --enable-ipv6 --disable-universal --enable-dbus=no --without-libnl
+make
+sudo make install
+cd ..
+rm -rf libpcap
+```
+
+* [**nDPI**](https://github.com/ntop/nDPI)
+
+```bash
+git clone --branch dev https://github.com/ntop/nDPI.git
+cd nDPI
+./autogen.sh
+./configure
+make
+sudo make install
+cd ..
+rm -rf nDPI
+```
+
+### Build NFStream
+
+```bash
 git clone https://github.com/nfstream/nfstream.git
 cd nfstream
 python3 -m pip install -r requirements.txt

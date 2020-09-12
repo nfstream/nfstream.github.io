@@ -15,9 +15,16 @@ This page contains NFStream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
-## Latest Official Release - v6.0.3
+## Latest Official Release - v6.0.4
 
-Release date: 2020-09-10 {% include new-release.html %}
+Release date: 2020-09-12 {% include new-release.html %}
+
+* Live capture performances optimization (Fix for AF_PACKETv3).
+* Add support of libgcrypt for QUIC improved disssection.
+
+## v6.0.3
+
+Release date: 2020-09-10
 
 * Upgrade libpcap to 1.10.0.
 
