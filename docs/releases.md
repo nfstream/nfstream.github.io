@@ -19,7 +19,8 @@ This page contains NFStream release history
 
 Release date: 2020-09-12 {% include new-release.html %}
 
-* Live capture performances optimization (Fix for AF_PACKETv3).
+* Live capture performances optimization, Fix for AF_PACKETv3.
+* CPU usage optimization (Remove active polling mechanism).
 * Add support of libgcrypt for QUIC improved disssection.
 
 ## v6.0.3

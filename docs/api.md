@@ -37,7 +37,7 @@ my_streamer = NFStreamer(source="facebook.pcap",
                          decode_tunnels=True,
                          bpf_filter=None,
                          promiscuous_mode=True,
-                         snapshot_length=1500,
+                         snapshot_length=1536,
                          idle_timeout=30,
                          active_timeout=300,
                          accounting_mode=0,
@@ -55,7 +55,7 @@ my_streamer = NFStreamer(source="facebook.pcap",
 | `decode_tunnels` | `[default=True]` | Enable/Disable GTP/TZSP tunnels decoding. |
 | `bpf_filter` | `[default=None]` | Specify a [BPF filter][bpf] filter for filtering selected traffic.  |
 | `promiscuous_mode` | `[default=True]` | Enable/Disable promiscuous capture mode.  |
-| `snapshot_length` | `[default=1500]` | Control packet slicing size (truncation) in bytes.  |
+| `snapshot_length` | `[default=1536]` | Control packet slicing size (truncation) in bytes.  |
 | `idle_timeout` | `[default=30]` | Flows that are idle (no packets received) for more than this value in seconds are expired. |
 | `active_timeout` | `[default=300]` | Flows that are active for more than this value in seconds are expired.  |
 | `accounting_mode` | `[default=0]` | Specify the accounting mode that will be used to report bytes related features (0: Link layer, 1: IP layer, 2: Transport layer, 3: Payload).  |
