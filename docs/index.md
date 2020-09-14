@@ -95,7 +95,7 @@ rm -rf libgcrypt
 * [**libpcap**](https://github.com/the-tcpdump-group/libpcap)
 
 ```bash
-git clone --branch libpcap-1.10.0-bp https://github.com/the-tcpdump-group/libpcap.git
+git clone --branch fanout https://github.com/tsnoam/libpcap
 cd libpcap
 ./configure --enable-ipv6 --disable-universal --enable-dbus=no --without-libnl
 make
