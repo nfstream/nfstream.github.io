@@ -11,16 +11,26 @@ As part of NFStream Framework, we offer an open datasets collection that are col
 environments. Our goal is to make network traffic measurement and analytics experiments simple, comparable, and 
 reproducible (**coming soon**).
 
-<form action="https://getsimpleform.com/messages?form_api_token=2e52f73a748a5f47eab728805bb43a83" method="post">
-  <!-- the redirect_to is optional, the form will redirect to the referrer on submission -->
-  <input type='hidden' name='redirect_to' value='<the complete return url e.g. http://fooey.com/thank-you.html>' />
-  <!-- all your input fields here.... -->
-  <input type='text' name='test' />
-  <input type='submit' value='Test form' />
-</form>
-
 ## Table of contents
 {: .no_toc .text-delta }
 
 1. TOC
 {:toc}
+
+
+## Test dataset
+<form
+  action="https://formspree.io/xnqoaprl"
+  method="POST"
+>
+  <label>
+    Your affiliation:
+    <input type="text" name="_replyto">
+  </label>
+  <label>
+    Your email:
+    <input type="text" name="_replyto">
+  </label>
+  <button type="submit">Download</button>
+  <input type=”hidden” name=”_next” value=”http://www.ovh.net/files/1Mio.dat” />
+</form>
