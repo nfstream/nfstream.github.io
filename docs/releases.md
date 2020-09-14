@@ -15,9 +15,17 @@ This page contains NFStream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
-## Latest Official Release - v6.0.5
+## Latest Official Release - v6.1.0
 
-Release date: 2020-09-13 {% include new-release.html %}
+Release date: 2020-09-14 {% include new-release.html %}
+
+* Optimize PACKET_FANOUT on Linux (cpu affinity assigning strategy).
+* Fix keybord interupt handling issue.
+* Implement Json periodic performance report for live capture.
+
+## v6.0.5
+
+Release date: 2020-09-13
 
 * Enable PACKET_FANOUT on Linux (Kernel load balancing).
 * Improve Keyboard Interrupt handling.
