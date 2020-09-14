@@ -19,18 +19,8 @@ reproducible (**coming soon**).
 
 
 ## Test dataset
-<form
-  action="https://formspree.io/xnqoaprl"
-  method="POST"
->
-  <label>
-    Your affiliation:
-    <input type="text" name="_replyto">
-  </label>
-  <label>
-    Your email:
-    <input type="text" name="_replyto">
-  </label>
-  <button type="submit">Download</button>
-  <input type=”hidden” name=”_next” value=”http://www.ovh.net/files/1Mio.dat” />
-</form>
+<script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
+<script>
+  window.formbutton=window.formbutton||function(){(formbutton.q=formbutton.q||[]).push(arguments)};
+  formbutton("create", {action: "https://formspree.io/xnqoaprl"})
+</script>
