@@ -15,9 +15,18 @@ This page contains NFStream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
-## Latest Official Release - v6.1.1
+## Latest Official Release - v6.1.2
 
-Release date: 2020-09-14 {% include new-release.html %}
+Release date: 2020-09-17 {% include new-release.html %}
+
+* Limit contention by excluding hyperthreading from scaling heuristic.
+* Change idle and active timeouts default values. 
+* Minor fixes and optimizations.
+* Fix Travis CI timeouts issues.
+
+## v6.1.1
+
+Release date: 2020-09-14
 
 * Optimize PACKET_FANOUT on Linux (cpu affinity assigning strategy).
 * Fix keybord interupt handling issue.

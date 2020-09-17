@@ -38,8 +38,8 @@ my_streamer = NFStreamer(source="facebook.pcap",
                          bpf_filter=None,
                          promiscuous_mode=True,
                          snapshot_length=1536,
-                         idle_timeout=30,
-                         active_timeout=300,
+                         idle_timeout=15,
+                         active_timeout=1800,
                          accounting_mode=0,
                          udps=None,
                          n_dissections=20,
@@ -56,8 +56,8 @@ my_streamer = NFStreamer(source="facebook.pcap",
 | `bpf_filter` | `[default=None]` | Specify a [BPF filter][bpf] filter for filtering selected traffic.  |
 | `promiscuous_mode` | `[default=True]` | Enable/Disable promiscuous capture mode.  |
 | `snapshot_length` | `[default=1536]` | Control packet slicing size (truncation) in bytes.  |
-| `idle_timeout` | `[default=30]` | Flows that are idle (no packets received) for more than this value in seconds are expired. |
-| `active_timeout` | `[default=300]` | Flows that are active for more than this value in seconds are expired.  |
+| `idle_timeout` | `[default=15]` | Flows that are idle (no packets received) for more than this value in seconds are expired. |
+| `active_timeout` | `[default=1800]` | Flows that are active for more than this value in seconds are expired.  |
 | `accounting_mode` | `[default=0]` | Specify the accounting mode that will be used to report bytes related features (0: Link layer, 1: IP layer, 2: Transport layer, 3: Payload).  |
 | `udps` | `[default=None]` | Specify user defined NFPlugins used to extend NFStreamer. |
 | `n_dissections` | `[default=20]` | Number of per flow packets to dissect for L7 visibility feature. When set to 0, L7 visibility feature is disabled. |
