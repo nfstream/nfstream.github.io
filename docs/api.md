@@ -136,8 +136,8 @@ In the following we detail each implemented feature.
 | `requested_server_name` | `str`  | Requested server name (SSL/TLS, DNS, HTTP). |
 | `client_fingerprint` | `str`  | Client fingerprint (DHCP fingerprint for DHCP, [JA3][ja3] for SSL/TLS and [HASSH][hassh] for SSH). |
 | `server_fingerprint` | `str`  | Server fingerprint ([JA3][ja3] for SSL/TLS and [HASSH][hassh] for SSH). |
-| `http_user_agent` | `str`  | Extracted HTTP user agent. |
-| `http_content_type` | `str`  | Extracted HTTP content type. |
+| `user_agent` | `str`  | Extracted user agent for HTTP or User Agent Identifier for QUIC. |
+| `content_type` | `str`  | Extracted HTTP content type. |
 
 #### Post-Mortem Statistical Features (statistical_analysis=True)
 
@@ -231,7 +231,6 @@ class NFPlugin(object):
                     flow.udps.packet_40_count = 0
         ----------------------------------------------------------------
         """
-        pass
 
     def on_update(self, packet, flow):
         """
@@ -242,7 +241,6 @@ class NFPlugin(object):
                     flow.udps.packet_40_count += 1
         ----------------------------------------------------------------
         """
-        pass
 
     def on_expire(self, flow):
         """
@@ -261,7 +259,6 @@ class NFPlugin(object):
                  del self.large_dict_passed_as_plugin_attribute
         ----------------------------------------------------------------
         """
-        pass
 ```
 
 ### NFPacket object

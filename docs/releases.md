@@ -15,9 +15,17 @@ This page contains NFStream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
+
+## Latest Official Release - v6.1.3
+
+Release date: 2020-09-21 {% include new-release.html %}
+
+* Add user_agent extraction on QUIC.
+
+
 ## Latest Official Release - v6.1.2
 
-Release date: 2020-09-17 {% include new-release.html %}
+Release date: 2020-09-17
 
 * Limit contention by excluding hyperthreading from scaling heuristic.
 * Change idle and active timeouts default values. 
