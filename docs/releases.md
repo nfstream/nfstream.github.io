@@ -20,12 +20,14 @@ This page contains NFStream release history
 
 Release date: 2020-10-21 {% include new-release.html %}
 
-* Improve multi cpus scaling.
+* Complete rework of multi cpus scaling.
 * Add src_mac, src_oui, dst_mac, dst_oui flow features.
 * Add MDNS and DHCP plugins.
 * Add configurable anonymization.
 * Add Python3.9 support.
 * Fix overflow in performance report.
+* Fix CAPWAP tunnels decoding.
+* nDPI maintenance update.
 
 ## v6.1.3
 
