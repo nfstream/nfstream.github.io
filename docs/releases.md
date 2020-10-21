@@ -16,14 +16,25 @@ This page contains NFStream release history
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
 
-## Latest Official Release - v6.1.3
+## Latest Official Release - v6.2.0
+
+Release date: 2020-10-21 {% include new-release.html %}
+
+* Improve multi cpus scaling.
+* Add src_mac, src_oui, dst_mac, dst_oui flow features.
+* Add MDNS and DHCP plugins.
+* Add configurable anonymization.
+* Add Python3.9 support.
+* Fix overflow in performance report.
+
+## v6.1.3
 
 Release date: 2020-09-21 {% include new-release.html %}
 
 * Add user_agent extraction on QUIC.
 
 
-## Latest Official Release - v6.1.2
+## v6.1.2
 
 Release date: 2020-09-17
 

@@ -38,7 +38,7 @@ my_streamer = NFStreamer(source="facebook.pcap",
                          bpf_filter=None,
                          promiscuous_mode=True,
                          snapshot_length=1536,
-                         idle_timeout=15,
+                         idle_timeout=120,
                          active_timeout=1800,
                          accounting_mode=0,
                          udps=None,
@@ -56,7 +56,7 @@ my_streamer = NFStreamer(source="facebook.pcap",
 | `bpf_filter` | `[default=None]` | Specify a [BPF filter][bpf] filter for filtering selected traffic.  |
 | `promiscuous_mode` | `[default=True]` | Enable/Disable promiscuous capture mode.  |
 | `snapshot_length` | `[default=1536]` | Control packet slicing size (truncation) in bytes.  |
-| `idle_timeout` | `[default=15]` | Flows that are idle (no packets received) for more than this value in seconds are expired. |
+| `idle_timeout` | `[default=120]` | Flows that are idle (no packets received) for more than this value in seconds are expired. |
 | `active_timeout` | `[default=1800]` | Flows that are active for more than this value in seconds are expired.  |
 | `accounting_mode` | `[default=0]` | Specify the accounting mode that will be used to report bytes related features (0: Link layer, 1: IP layer, 2: Transport layer, 3: Payload).  |
 | `udps` | `[default=None]` | Specify user defined NFPlugins used to extend NFStreamer. |
@@ -78,21 +78,21 @@ for flow in my_streamer:
 #### Pandas dataframe conversion
 
 ```python
-my_dataframe = my_streamer.to_pandas(ip_anonymization=False)
+my_dataframe = my_streamer.to_pandas(columns_to_anonymize=[])
 my_dataframe.head()
 ```
 
-| `ip_anonymization` | `[default=False]` | Enable/Disable IP anonymization. IP anonymization is based on a random secret key generation at each start of NFStreamer. The generated key is used to anonymize IP source and IP destination fields using blake2b algorithm. |
+| `columns_to_anonymize` | `[default=[]]` | List of columns names to anonymize. Anonymization is based on a random secret key generation at each start of NFStreamer. The generated key is used to anonymize configured values using blake2b algorithm. |
 
 #### CSV file conversion
 
 ```python
-total_flows_count = my_streamer.to_csv(path=None, ip_anonymization=False, flows_per_file=0)
+total_flows_count = my_streamer.to_csv(path=None, columns_to_anonymize=[], flows_per_file=0)
 ```
 
 | `path` | `[default=None]` | Specify output path of csv resulting file. When Set to None, NFStream uses source as path and add a '.csv' extension to it. |
 | `flows_per_file` | `[default=0]` | Specify maximum flows per generated file. Each generated file name will be appended by the chunk index. This limit is disabled when set to 0. |
-| `ip_anonymization` | `[default=False]` | Enable/Disable IP anonymization. IP anonymization is based on a random secret key generation at each start of NFStreamer. The generated key is used to anonymize IP source and IP destination fields using blake2b algorithm. |
+| `columns_to_anonymize` | `[default=[]]` | List of columns names to anonymize. Anonymization is based on a random secret key generation at each start of NFStreamer. The generated key is used to anonymize configured values using blake2b algorithm. |
 
 ## NFlow
 
@@ -104,10 +104,12 @@ In the following we detail each implemented feature.
 | `id` | `int`  | Flow identifier |
 | `expiration_id` | `int`  | Identifier of flow expiration trigger. Can be 0 for idle_timeout, 1 for active_timeout or -1 for custom expiration. |
 | `src_ip` | `str`  | Source IP address string representation. |
-| `src_ip_is_private` | `bool`  | Source IP address type (1 if private, else 0). |
+| `src_mac` | `str`  | Source MAC address string representation. |
+| `src_oui` | `str`  | Source Organizationally Unique Identifier string representation. |
 | `src_port` | `int`  | Transport layer source port. |
 | `dst_ip` | `str`  | Destination IP address string representation. |
-| `dst_ip_is_private` | `bool`  | Destination IP address type (1 if private, else 0). |
+| `dst_mac` | `str`  | Destination MAC address string representation. |
+| `dst_oui` | `str`  | Destination Organizationally Unique Identifier string representation. |
 | `dst_port` | `int`  | Transport layer destination port. |
 | `protocol` | `int`  | Transport layer protocol. |
 | `ip_version` | `int`  | IP version. |
@@ -274,7 +276,11 @@ information are exposed in an NFPacket (Network Flow Packet) which contains the 
 | `transport_size` | `int`  | Transport packet size. |
 | `payload_size` | `int`  | Packet payload size. |
 | `src_ip` | `str`  | Source IP address string representation. |
+| `src_mac` | `str`  | Source MAC address string representation. |
+| `src_oui` | `str`  | Source Organizationally Unique Identifier string representation. |
 | `dst_ip` | `str`  | Destination IP address string representation. |
+| `dst_mac` | `str`  | Destination MAC address string representation. |
+| `dst_oui` | `str`  | Destination Organizationally Unique Identifier string representation. |
 | `src_port` | `int`  | Transport layer source port. |
 | `dst_port` | `int`  | Transport layer destination port. |
 | `protocol` | `int`  | Transport layer protocol. |
@@ -370,6 +376,8 @@ for flow in streamer: # Work also with to_pandas, to_csv
    print(flow.udps.splt_direction)
 ```
 
+Other examples could be found and imported in NFStream [plugins][plg] submodule.
+
 #### Machine Learning Model: Train and Deploy
 
 In the the following, we demonstrate a simplistic machine learning approach training and deployment.
@@ -411,3 +419,4 @@ for flow in ml_streamer:
 [bpf]: https://biot.com/capstats/bpf.html
 [ja3]: https://github.com/salesforce/ja3
 [hassh]: https://github.com/salesforce/hassh
+[plg]: https://github.com/nfstream/nfstream/tree/master/nfstream/plugins
