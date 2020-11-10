@@ -15,10 +15,23 @@ This page contains NFStream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
+## Latest Official Release - v6.2.1
 
-## Latest Official Release - v6.2.0
+Release date: 2020-11-10 {% include new-release.html %}
 
-Release date: 2020-10-21 {% include new-release.html %}
+* Add raw IPv4/IPv6 datalink type support.
+* Make plugins importable.
+* Improve libpcap integration.
+* nDPI maintenance update.
+* Fix IPv6 extension headers handling.
+* Fix autoscale.
+* Fix DHCP plugin.
+* Fix stratup drops.
+
+
+## v6.2.0
+
+Release date: 2020-10-21
 
 * Complete rework of multi cpus scaling.
 * Add src_mac, src_oui, dst_mac, dst_oui flow features.
@@ -31,7 +44,7 @@ Release date: 2020-10-21 {% include new-release.html %}
 
 ## v6.1.3
 
-Release date: 2020-09-21 {% include new-release.html %}
+Release date: 2020-09-21
 
 * Add user_agent extraction on QUIC.
 
