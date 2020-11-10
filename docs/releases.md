@@ -15,9 +15,15 @@ This page contains NFStream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
-## Latest Official Release - v6.2.1
+## Latest Official Release - v6.2.2
 
-Release date: 2020-11-10 {% include new-release.html %}
+Release date: 2020-11-11 {% include new-release.html %}
+
+* Patch fixing anonymization on user defined plugins.
+
+## v6.2.1
+
+Release date: 2020-11-10
 
 * Add raw IPv4/IPv6 datalink type support.
 * Make plugins importable.
@@ -26,7 +32,7 @@ Release date: 2020-11-10 {% include new-release.html %}
 * Fix IPv6 extension headers handling.
 * Fix autoscale.
 * Fix DHCP plugin.
-* Fix stratup drops.
+* Reduce startup drops.
 
 
 ## v6.2.0
