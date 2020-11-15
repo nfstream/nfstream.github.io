@@ -112,7 +112,10 @@ cd nDPI
 ./autogen.sh
 ./configure
 make
-sudo make install
+sudo mkdir /usr/local/include/ndpi
+sudo cp -a src/include/. /usr/local/include/ndpi/
+sudo cp example/ndpiReader /usr/local/bin/ndpiReader
+sudo cp src/lib/libndpi.a /usr/local/lib/libndpi.a
 cd ..
 rm -rf nDPI
 ```
