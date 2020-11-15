@@ -15,9 +15,15 @@ This page contains NFStream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
-## Latest Official Release - v6.2.2
+## Latest Official Release - v6.2.3
 
-Release date: 2020-11-11 {% include new-release.html %}
+Release date: 2020-11-15 {% include new-release.html %}
+
+* Patch fixing BPF filtering on live interface.
+
+## v6.2.2
+
+Release date: 2020-11-11
 
 * Patch fixing anonymization on user defined plugins.
 
