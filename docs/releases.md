@@ -15,9 +15,37 @@ This page contains NFStream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
-## Latest Official Release - v6.2.3
+## Latest Official Release - v6.3.0
 
-Release date: 2020-11-15 {% include new-release.html %}
+Release date: 2020-04-21 {% include new-release.html %}
+
+* Implement tunnel_id extraction.
+
+## v6.2.6
+
+Release date: 2021-04-14
+
+* Add support for pcapng format.
+* Add pypy3.7 support.
+* Improve errors handling.
+* nDPI update and minor fixes.
+
+## v6.2.5
+
+Release date: 2020-11-27
+
+* Patch for minimal truncated UDP raw pcap handling.
+
+## v6.2.4
+
+Release date: 2020-11-23
+
+* Minor fixes (csv and pandas interfaces).
+* nDPI maintenance update.
+
+## v6.2.3
+
+Release date: 2020-11-15
 
 * Patch fixing BPF filtering on live interface.
 

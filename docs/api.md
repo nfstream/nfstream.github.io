@@ -11,7 +11,7 @@ nav_order: 4
 
 The flow-based aggregation consists of aggregating packets into flows based on a shared set of characteristics 
 (flow key, e.g., source IP address, destination IP address, transport protocol, source port, destination port, 
-VLAN identifier). A flow cache maintains each flow entry until its termination (e.g., active timeout, inactive timeout).
+VLAN identifier, tunnel Identifier). A flow cache maintains each flow entry until its termination (e.g., active timeout, inactive timeout).
 While the entry is present in the flow cache, basic counters, and several metrics are updated. 
 If two pairs generate flows on both directions, the flow cache uses a bidirectional flow definition, adding counters 
 and metrics for both directions.
@@ -52,7 +52,7 @@ my_streamer = NFStreamer(source="facebook.pcap",
 ### NFStreamer attributes
 
 | `source` | `[default=None]` | Packet capture source. Pcap file path or network interface name. |
-| `decode_tunnels` | `[default=True]` | Enable/Disable GTP/TZSP tunnels decoding. |
+| `decode_tunnels` | `[default=True]` | Enable/Disable GTP/CAPWAP/TZSP tunnels decoding. |
 | `bpf_filter` | `[default=None]` | Specify a [BPF filter][bpf] filter for filtering selected traffic.  |
 | `promiscuous_mode` | `[default=True]` | Enable/Disable promiscuous capture mode.  |
 | `snapshot_length` | `[default=1536]` | Control packet slicing size (truncation) in bytes.  |
@@ -129,6 +129,10 @@ In the following we detail each implemented feature.
 | `dst2src_duration_ms` | `int`  | Flow dst2src duration in milliseconds. |
 | `dst2src_packets` | `int`  | Flow dst2src packets accumulator. |
 | `dst2src_bytes` | `int`  | Flow dst2src bytes accumulator (depends on accounting_mode). |
+
+#### Tunnel Decoding Features (decode_tunnels=True)
+
+| `tunnel_id` | `int`  | Tunnel identifier (O: No Tunnel, 1: GTP, 2: CAPWAP, 3: TZSP). |
 
 #### NFlow Layer-7 Visibility Features (n_dissections>0)
 
@@ -296,6 +300,7 @@ information are exposed in an NFPacket (Network Flow Packet) which contains the 
 | `psh` | `bool`  | TCP PSH Flag present. |
 | `rst` | `bool`  | TCP RST Flag present. |
 | `fin` | `bool`  | TCP FIN Flag present. |
+| `tunnel_id` | `int`  | Tunnel identifier (O: No Tunnel, 1: GTP, 2: CAPWAP, 3: TZSP). |
 
 ### NFPlugins Examples
 
