@@ -15,9 +15,28 @@ This page contains NFStream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
-## Latest Official Release - v6.3.0
+## Latest Official Release - v6.3.3
 
-Release date: 2020-04-21 {% include new-release.html %}
+Release date: 2021-07-02 {% include new-release.html %}
+
+* nDPI Performance improvements.
+
+## v6.3.2
+
+Release date: 2021-06-10
+
+* Fix multiple interface capture support.
+* nDPI update and minor fixes
+
+## v6.3.1
+
+Release date: 2021-04-22
+
+* Update package requirements.
+
+## v6.3.0
+
+Release date: 2021-04-21
 
 * Implement tunnel_id extraction.
 
