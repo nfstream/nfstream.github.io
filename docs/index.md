@@ -54,14 +54,14 @@ pip install nfstream
 
 ```bash
 sudo apt-get update
-sudo apt-get install autoconf automake libtool pkg-config flex bison gettext
+sudo apt-get install autoconf automake libtool pkg-config flex bison gettext libjson-c-dev
 sudo apt-get install libusb-1.0-0-dev libdbus-glib-1-dev libbluetooth-dev libnl-genl-3-dev
 ```
 
 #### MacOS Prerequisites
 
 ```bash
-brew install autoconf automake libtool pkg-config gettext
+brew install autoconf automake libtool pkg-config gettext json-c
 ```
 
 ### Build Dependencies
@@ -69,7 +69,7 @@ brew install autoconf automake libtool pkg-config gettext
 * [**libgpg-error**](https://github.com/gpg/libgpg-error)
 
 ```bash
-git clone --branch libgpg-error-1.39 https://github.com/gpg/libgpg-error
+git clone --branch libgpg-error-1.42 https://github.com/gpg/libgpg-error
 cd libgpg-error
 ./autogen.sh
 ./configure -enable-maintainer-mode --enable-static --enable-shared --with-pic --disable-doc --disable-nls
@@ -82,7 +82,7 @@ rm -rf libgpg-error
 * [**libgcrypt**](https://github.com/gpg/libgcrypt)
 
 ```bash
-git clone --branch libgcrypt-1.8.6 https://github.com/gpg/libgcrypt
+git clone --branch libgcrypt-1.8.8 https://github.com/gpg/libgcrypt
 cd libgcrypt
 ./autogen.sh
 ./configure -enable-maintainer-mode --enable-static --enable-shared --with-pic --disable-doc
