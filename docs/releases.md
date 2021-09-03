@@ -15,9 +15,18 @@ This page contains NFStream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
-## Latest Official Release - v6.3.3
+## Latest Official Release - v6.3.4
 
-Release date: 2021-07-02 {% include new-release.html %}
+Release date: 2021-09-03 {% include new-release.html %}
+
+* Fix transport_size value.
+* Fix requirements on MacOS and PyPy.
+* Update dependencies (libgcrypt, libpcap).
+* Maintainance update of nDPI.
+
+## v6.3.3
+
+Release date: 2021-07-02
 
 * nDPI Performance improvements.
 
@@ -26,7 +35,7 @@ Release date: 2021-07-02 {% include new-release.html %}
 Release date: 2021-06-10
 
 * Fix multiple interface capture support.
-* nDPI update and minor fixes
+* nDPI update and minor fixes.
 
 ## v6.3.1
 
