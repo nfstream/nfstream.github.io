@@ -149,27 +149,27 @@ In the following we detail each implemented feature.
 
 | `bidirectional_min_ps` | `int`  | Flow bidirectional minimum packet size (depends on accounting_mode).|
 | `bidirectional_mean_ps` | `float`  | Flow bidirectional mean packet size (depends on accounting_mode).|
-| `bidirectional_stdev_ps` | `float`  | Flow bidirectional packet size sample standard deviation (depends on accounting_mode).|
+| `bidirectional_stddev_ps` | `float`  | Flow bidirectional packet size sample standard deviation (depends on accounting_mode).|
 | `bidirectional_max_ps` | `int`  | Flow bidirectional maximum packet size (depends on accounting_mode).|
 | `src2dst_min_ps` | `int`  | Flow src2dst minimum packet size (depends on accounting_mode).|
 | `src2dst_mean_ps` | `float`  | Flow src2dst mean packet size (depends on accounting_mode).|
-| `src2dst_stdev_ps` | `float`  | Flow src2dst packet size sample standard deviation (depends on accounting_mode).|
+| `src2dst_stddev_ps` | `float`  | Flow src2dst packet size sample standard deviation (depends on accounting_mode).|
 | `src2dst_max_ps` | `int`  | Flow src2dst maximum packet size (depends on accounting_mode).|
 | `dst2src_min_ps` | `int`  | Flow dst2src minimum packet size (depends on accounting_mode).|
 | `dst2src_mean_ps` | `float`  | Flow dst2src mean packet size (depends on accounting_mode).|
-| `dst2src_stdev_ps` | `float`  | Flow dst2src packet size sample standard deviation (depends on accounting_mode).|
+| `dst2src_stddev_ps` | `float`  | Flow dst2src packet size sample standard deviation (depends on accounting_mode).|
 | `dst2src_max_ps` | `int`  | Flow dst2src maximum packet size (depends on accounting_mode).|
 | `bidirectional_min_piat_ms` | `int`  | Flow bidirectional minimum packet inter arrival time.|
 | `bidirectional_mean_piat_ms` | `float`  | Flow bidirectional mean packet inter arrival time.|
-| `bidirectional_stdev_piat_ms` | `float`  | Flow bidirectional packet inter arrival time sample standard deviation.|
+| `bidirectional_stddev_piat_ms` | `float`  | Flow bidirectional packet inter arrival time sample standard deviation.|
 | `bidirectional_max_piat_ms` | `int`  | Flow bidirectional maximum packet inter arrival time.|
 | `src2dst_min_piat_ms` | `int`  | Flow src2dst minimum packet inter arrival time.|
 | `src2dst_mean_piat_ms` | `float`  | Flow src2dst mean packet inter arrival time.|
-| `src2dst_stdev_piat_ms` | `float`  | Flow src2dst packet inter arrival time sample standard deviation.|
+| `src2dst_stddev_piat_ms` | `float`  | Flow src2dst packet inter arrival time sample standard deviation.|
 | `src2dst_max_piat_ms` | `int`  | Flow src2dst maximum packet inter arrival time.|
 | `dst2src_min_piat_ms` | `int`  | Flow dst2src minimum packet inter arrival time.|
 | `dst2src_mean_piat_ms` | `float`  | Flow dst2src mean packet inter arrival time.|
-| `dst2src_stdev_piat_ms` | `float`  | Flow dst2src packet inter arrival time sample standard deviation.|
+| `dst2src_stddev_piat_ms` | `float`  | Flow dst2src packet inter arrival time sample standard deviation.|
 | `dst2src_max_piat_ms` | `int`  | Flow dst2src maximum packet inter arrival time.|
 | `bidirectional_syn_packets` | `int`  | Flow bidirectional syn packet accumulators.|
 | `bidirectional_cwr_packets` | `int`  | Flow bidirectional cwr packet accumulators.|
