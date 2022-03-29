@@ -64,66 +64,10 @@ sudo apt-get install libusb-1.0-0-dev libdbus-glib-1-dev libbluetooth-dev libnl-
 brew install autoconf automake libtool pkg-config gettext json-c
 ```
 
-### Build Dependencies
-
-* [**libgpg-error**](https://github.com/gpg/libgpg-error)
-
-```bash
-git clone --branch libgpg-error-1.42 https://github.com/gpg/libgpg-error
-cd libgpg-error
-./autogen.sh
-./configure -enable-maintainer-mode --enable-static --enable-shared --with-pic --disable-doc --disable-nls
-make
-sudo make install
-cd ..
-rm -rf libgpg-error
-```
-
-* [**libgcrypt**](https://github.com/gpg/libgcrypt)
-
-```bash
-git clone --branch libgcrypt-1.8.8 https://github.com/gpg/libgcrypt
-cd libgcrypt
-./autogen.sh
-./configure -enable-maintainer-mode --enable-static --enable-shared --with-pic --disable-doc
-make
-sudo make install
-cd ..
-rm -rf libgcrypt
-```
-
-* [**libpcap**](https://github.com/the-tcpdump-group/libpcap)
-
-```bash
-git clone --branch fanout https://github.com/tsnoam/libpcap
-cd libpcap
-./configure --enable-ipv6 --disable-universal --enable-dbus=no --without-libnl
-make
-sudo make install
-cd ..
-rm -rf libpcap
-```
-
-* [**nDPI**](https://github.com/ntop/nDPI)
-
-```bash
-git clone --branch dev https://github.com/ntop/nDPI.git
-cd nDPI
-./autogen.sh
-./configure
-make
-sudo mkdir /usr/local/include/ndpi
-sudo cp -a src/include/. /usr/local/include/ndpi/
-sudo cp example/ndpiReader /usr/local/bin/ndpiReader
-sudo cp src/lib/libndpi.a /usr/local/lib/libndpi.a
-cd ..
-rm -rf nDPI
-```
-
 ### Build NFStream
 
 ```bash
-git clone https://github.com/nfstream/nfstream.git
+git clone --recurse-submodules https://github.com/nfstream/nfstream.git
 cd nfstream
 python3 -m pip install -r requirements.txt
 python3 setup.py bdist_wheel
