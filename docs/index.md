@@ -69,8 +69,10 @@ brew install autoconf automake libtool pkg-config gettext json-c
 ```bash
 git clone --recurse-submodules https://github.com/nfstream/nfstream.git
 cd nfstream
-python3 -m pip install -r requirements.txt
-python3 setup.py bdist_wheel
+python3 -m pip install --upgrade pip
+python3 -m pip install -r dev_requirements.txt
+python3 prepare.py
+python3 -m pip install .
 ```
 
 [ndpi]: https://github.com/ntop/nDPI
