@@ -54,7 +54,7 @@ pip install nfstream
 
 ```bash
 sudo apt-get update
-sudo apt-get install autoconf automake libtool pkg-config flex bison gettext libjson-c-dev
+sudo apt-get install python3-dev autoconf automake libtool pkg-config flex bison gettext libjson-c-dev
 sudo apt-get install libusb-1.0-0-dev libdbus-glib-1-dev libbluetooth-dev libnl-genl-3-dev
 ```
 
