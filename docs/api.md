@@ -64,7 +64,7 @@ my_streamer = NFStreamer(source="facebook.pcap",
 | `statistical_analysis` | `[default=False]` | Enable/Disable post-mortem flow statistical analysis.  |
 | `splt_analysis` | `[default=0]` | Specify the sequence of first packets length for early statistical analysis. When set to 0, splt_analysis is disabled. |
 | `n_meters` | `[default=0]` | Specify the number of parallel metering processes. When set to 0, NFStreamer will automatically scale metering according to available physical cores on the running host. |
-| `performance_report` | `[default=0]` | [**Performance report**](https://github.com/nfstream/nfstream/blob/master/assets/PERFORMANCE_REPORT.md) interval in seconds. Disabled whhen set to 0. Ignored for offline capture. |
+| `performance_report` | `[default=0]` | [**Performance report**](https://github.com/nfstream/nfstream/blob/master/assets/PERFORMANCE_REPORT.md) interval in seconds. Disabled when set to 0. Ignored for offline capture. |
 
 ### NFStreamer methods
 
