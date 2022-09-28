@@ -15,9 +15,72 @@ This page contains NFStream release history
 
 - GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
 
-## Latest Official Release - v6.3.4
+## Latest Official Release - v6.5.2
+Release date: 2022-09-27 {% include new-release.html %}
 
-Release date: 2021-09-03 {% include new-release.html %}
+* nDPI update.
+* Windows fixes.
+* Multiple pcap files support.
+* Wheels generation for Alpine, Linux 32bits, aarch64, Apple Silicon.
+
+## v6.5.1
+
+Release date: 2022-04-27
+
+* Fix for broken pypi Linux wheels.
+
+## v6.5.0
+
+Release date: 2022-04-27
+
+* Performances improvements (x3 faster): CFFI bindings from ABI to API mod.
+* nDPI integration several improvements.
+
+## v6.4.3
+
+Release date: 2022-03-16
+
+* Add CSV rotating files feature.
+* Add pypi wheels for aarch64 and armhf.
+* nDPI maintenance update.
+* Fix RAW datalink handling on Windows.
+
+## v6.4.2
+
+Release date: 2022-02-11
+
+* Fix for pypi missing wheels.
+
+## v6.4.1
+
+Release date: 2022-02-10
+
+* nDPI maintenance update.
+
+## v6.4.0
+
+Release date: 2021-12-10
+
+* Introduce Windows platform official support.
+* Introduce System Visibility feature.
+* Introduce Python 3.10 official support.
+* nDPI maintenance update.
+* Patch for RPI platforms cores detection.
+
+## v6.3.5
+
+Release date: 2021-10-07
+
+* Improve IPv6 handling.
+* nDPI maintenance update (memory consumption reduction).
+* Fix macOS multiprocessing context.
+* Fix macOS dependencies handling (NumPy and pandas)
+* Improve README (ToC and related publications).
+
+
+## v6.3.4
+
+Release date: 2021-09-03
 
 * Fix transport_size value.
 * Fix requirements on MacOS and PyPy.

@@ -51,7 +51,7 @@ my_streamer = NFStreamer(source="facebook.pcap",
 
 ### NFStreamer attributes
 
-| `source` | `[default=None]` | Packet capture source. Pcap file path or network interface name. |
+| `source` | `[default=None]` | Packet capture source. Pcap file path, List of pcap files path (considered as a single file) or network interface name. |
 | `decode_tunnels` | `[default=True]` | Enable/Disable GTP/CAPWAP/TZSP tunnels decoding. |
 | `bpf_filter` | `[default=None]` | Specify a [BPF filter][bpf] filter for filtering selected traffic.  |
 | `promiscuous_mode` | `[default=True]` | Enable/Disable promiscuous capture mode.  |
@@ -138,7 +138,8 @@ In the following we detail each implemented feature.
 
 | `application_name` | `str`  | nDPI detected application name. |
 | `application_category_name` | `str`  | nDPI detected application category name. |
-| `application_is_guessed` | `int`  | Indicates if detection result is based on pure dissection or on a port-based guess. |
+| `application_is_guessed` | `int`  | Indicates if detection result is based on pure dissection or on a guess heuristics. |
+| `application_confidence` | `int`  | Indicates the underlying detection method (O: Unknown classification, 100: Classification results based on partial/incomplete DPI information, 110:  Classification results based on some LRU cache with partial/incomplete DPI information, 200: Classification results based on some LRU cache (i.e. correlation among sessions), 210: Deep packet inspection). |
 | `requested_server_name` | `str`  | Requested server name (SSL/TLS, DNS, HTTP). |
 | `client_fingerprint` | `str`  | Client fingerprint (DHCP fingerprint for DHCP, [JA3][ja3] for SSL/TLS and [HASSH][hassh] for SSH). |
 | `server_fingerprint` | `str`  | Server fingerprint ([JA3][ja3] for SSL/TLS and [HASSH][hassh] for SSH). |
