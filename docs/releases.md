@@ -13,10 +13,17 @@ This page contains NFStream release history
 
 ## Latest Unofficial Release (`master` branch)
 
-- GitHub page: <https://github.com/aouinizied/nfstream>{:target="_blank"}
+- GitHub page: <https://github.com/nfstream/nfstream>{:target="_blank"}
+
+## Latest Official Release - v6.5.3
+Release date: 2022-10-26 {% include new-release.html %}
+
+* nDPI update.
+* Implement max_nflows parameter.
+* Minor example fixes.
 
 ## Latest Official Release - v6.5.2
-Release date: 2022-09-27 {% include new-release.html %}
+Release date: 2022-09-27
 
 * nDPI update.
 * Windows fixes.
