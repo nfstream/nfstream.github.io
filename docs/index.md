@@ -27,6 +27,8 @@ across experiments.
 * **Encrypted layer-7 visibility:** NFStream deep packet inspection is based on [**nDPI**][ndpi]. 
 It allows NFStream to perform [**reliable**][reliable] encrypted applications identification and metadata 
 fingerprinting (e.g. TLS, SSH, DHCP, HTTP).
+* **System visibility:** NFStream probes the monitored system's kernel to obtain information on open Internet sockets 
+and collects guaranteed ground-truth (process name, PID, etc.) at the application level.
 * **Statistical features extraction:** NFStream provides state of the art of flow-based statistical feature extraction. 
 It includes both post-mortem statistical features (e.g. min, mean, stddev and max of packet size and inter arrival time) 
 and early flow features (e.g. sequence of first n packets sizes, inter arrival times and
@@ -64,6 +66,17 @@ sudo apt-get install libusb-1.0-0-dev libdbus-glib-1-dev libbluetooth-dev libnl-
 brew install autoconf automake libtool pkg-config gettext json-c
 ```
 
+### Windows Prerequisites
+
+On Windows, NFStream build system is based MSYS2. Please follow [**msys2 installation guide**][msys2] before moving to 
+the next steps.
+
+```bash
+pacman -S git unzip mingw-w64-x86_64-toolchain automake1.16 automake-wrapper autoconf libtool make mingw-w64-x86_64-json-c mingw-w64-x86_64-crt-git
+```
+
+Note that you will also need to have npcap installed according to [**these instructions**][npcap].
+
 ### Build NFStream
 
 ```bash
@@ -79,3 +92,5 @@ python3 -m pip install .
 [reliable]: http://people.ac.upc.edu/pbarlet/papers/ground-truth.pam2014.pdf
 [pypy]: https://www.pypy.org/
 [cffi]: https://cffi.readthedocs.io/en/latest/index.html
+[msys2]: https://www.msys2.org/
+[npcap]: https://npcap.com/guide/npcap-users-guide.html

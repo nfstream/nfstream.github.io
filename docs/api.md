@@ -33,7 +33,7 @@ until flow expiration is triggered (active timeout, inactive timeout).
 
 ```python
 from nfstream import NFStreamer
-my_streamer = NFStreamer(source="facebook.pcap",
+my_streamer = NFStreamer(source="facebook.pcap", # or network interface
                          decode_tunnels=True,
                          bpf_filter=None,
                          promiscuous_mode=True,
@@ -46,7 +46,10 @@ my_streamer = NFStreamer(source="facebook.pcap",
                          statistical_analysis=False,
                          splt_analysis=0,
                          n_meters=0,
-                         performance_report=0)
+                         max_nflows=0,
+                         performance_report=0,
+                         system_visibility_mode=0,
+                         system_visibility_poll_ms=100)
 ```
 
 ### NFStreamer attributes
@@ -63,8 +66,11 @@ my_streamer = NFStreamer(source="facebook.pcap",
 | `n_dissections` | `[default=20]` | Number of per flow packets to dissect for L7 visibility feature. When set to 0, L7 visibility feature is disabled. |
 | `statistical_analysis` | `[default=False]` | Enable/Disable post-mortem flow statistical analysis.  |
 | `splt_analysis` | `[default=0]` | Specify the sequence of first packets length for early statistical analysis. When set to 0, splt_analysis is disabled. |
+| `max_nflows` | `[default=0]` | Specify the number of maximum flows to capture before returning. Unset when equal to 0. |
 | `n_meters` | `[default=0]` | Specify the number of parallel metering processes. When set to 0, NFStreamer will automatically scale metering according to available physical cores on the running host. |
 | `performance_report` | `[default=0]` | [**Performance report**](https://github.com/nfstream/nfstream/blob/master/assets/PERFORMANCE_REPORT.md) interval in seconds. Disabled when set to 0. Ignored for offline capture. |
+| `system_visibility_mode` | `[default=0]` |  Enable system process mapping by probing the host machine. |
+| `system_visibility_poll_ms` | `[default=100]` |  Set the polling interval in milliseconds for system process mapping feature (0 is the maximum achievable rate). |
 
 ### NFStreamer methods
 
@@ -87,12 +93,13 @@ my_dataframe.head()
 #### CSV file conversion
 
 ```python
-total_flows_count = my_streamer.to_csv(path=None, columns_to_anonymize=[], flows_per_file=0)
+total_flows_count = my_streamer.to_csv(path=None, columns_to_anonymize=[], flows_per_file=0, rotate_files=0)
 ```
 
 | `path` | `[default=None]` | Specify output path of csv resulting file. When Set to None, NFStream uses source as path and add a '.csv' extension to it. |
 | `flows_per_file` | `[default=0]` | Specify maximum flows per generated file. Each generated file name will be appended by the chunk index. This limit is disabled when set to 0. |
 | `columns_to_anonymize` | `[default=[]]` | List of columns names to anonymize. Anonymization is based on a random secret key generation at each start of NFStreamer. The generated key is used to anonymize configured values using blake2b algorithm. |
+| `rotate_files` | `[default=0]` |  Number of rotating files to limit disk storage usage. Example: NFstream started with flows per file `1000` and rotate_files `5` will force NFStreamer to overwrite file 0 when it reached 5000 flows. 
 
 ## NFlow
 
@@ -202,6 +209,11 @@ In the following we detail each implemented feature.
 | `splt_direction` | `list`  | List of N (splt_analysis=N) first flow packet directions (0: src2dst, 1: dst2src, -1:no packet).|
 | `splt_ps` | `list`  | List of N (splt_analysis=N) first flow packet sizes (depends on accounting_mode, -1 when there is no packet).|
 | `splt_piat_ms` | `list`  | List of N (splt_analysis=N) first flow packet inter arrival times (always 0 for first packet, -1 when there is no packet).|
+
+#### System Visibility Features (system_visibility_mode=1)
+
+| `process_name` | `str`  | Name of the host process that generated the flow.|
+| `process_pid` | `int`  | PID of the host process that generated the flow .|
 
 ## NFPlugin
 
