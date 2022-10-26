@@ -1,12 +1,12 @@
 left_items:
-  - name: Documentation
+  - name: Get Started
     link: /docs/
     external_link: false
   - name: Live Notebook
     link: https://mybinder.org/v2/gh/aouinizied/nfstream-tutorials/master?filepath=demo_notebook.ipynb
     external_link: true
-  - name: Datasets
-    link: /docs/datasets
+  - name: APIs
+    link: /docs/api
     external_link: false
   - name: Community
     link: /docs/community
