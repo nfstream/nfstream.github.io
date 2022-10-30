@@ -9,8 +9,8 @@ nav_exclude: true
     <meta name="image" property="og:image" content="https://www.nfstream.org/resources/preview.png">
     <div class="lp-center">
       <h1 style="font-weight: bold">NFStream: Flexible Network Data Analysis Framework</h1>
-      <h2 style="padding-bottom: 30px">NFStream is a Python framework providing fast, flexible, and expressive data structures designed
-        to make working with online or offline network data both easy and intuitive.</h2>
+      <h2 style="padding-bottom: 30px">NFStream is a multiplatform Python framework providing fast, flexible, and expressive data structures designed to make
+        working with online or offline network data easy and intuitive.</h2>
       <a href="https://mybinder.org/v2/gh/aouinizied/nfstream-tutorials/master?filepath=demo_notebook.ipynb" class="btn btn-blue fs-5 mb-3 mb-md-5 mr-5">Live Notebook</a>
       <a href="{{ site.baseurl }}/docs/" class="btn btn-blue fs-5 mb-3 mb-md-5">Get Started</a>
     </div>
@@ -50,9 +50,9 @@ offline_streamer = NFStreamer(source="tor.pcap",
                               statistical_analysis=True,
                               splt_analysis=10)
 
-df = offline_streamer.to_pandas(ip_anonymization=False)
+df = offline_streamer.to_pandas(columns_to_anonymize=())
 total_flows = offline_streamer.to_csv(flows_per_file=10000,
-                                      ip_anonymization=True)
+                                      columns_to_anonymize=("src_ip"))
 
 {% endhighlight %}
       </div>
@@ -62,7 +62,7 @@ total_flows = offline_streamer.to_csv(flows_per_file=10000,
     <div class="lp-center lp-section-container">
       <div class="lp-col  lp-col-left">
           <h2>Flexibility</h2>
-          <p> NFStream is easily extensible using NFPlugin. It allows to create a new feature within a few lines of
+          <p> NFStream is easily extensible using NFPlugin. It allows to create a new flow feature within few lines of
             Python.</p>
           <a href="{{ site.baseurl }}/docs/api#nfplugin" class="btn btn-blue fs-5 mb-3 mb-md-5">Learn More</a>
       </div>
@@ -141,6 +141,7 @@ for flow in extended_streamer:
           <img src="{{ site.baseurl }}{{ site.logo_tuke }}" width="{{ site.logo_width }}" height="57">
           <img src="{{ site.baseurl }}{{ site.logo_ntop }}" width="{{ site.logo_width }}" height="57">
           <img src="{{ site.baseurl }}{{ site.logo_nmap }}" width="{{ site.logo_width }}" height="57">
+          <img src="{{ site.baseurl }}{{ site.logo_google }}" width="{{ site.logo_width }}" height="57">
         </ul>
       </div>
     </div>
