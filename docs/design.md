@@ -91,7 +91,7 @@ each time a new NFPacket is mapped to the flow entry. Finally, on_expire is perf
 expired. Consequently, extending NFStream is simple. Adding new flow features or ML model outcomes can be achieved 
 in just a few lines.
 
-## Socket collector
+## Socket Collector
 Socket collector probes the Operating System logs to construct a view of the active connections table.
 It is only activated when system visibility mode is set for end-host ground truth generation. The collector detects 
 creation and closing of connections and send these state updates to the streamer.
