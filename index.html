@@ -9,8 +9,7 @@ nav_exclude: true
     <meta name="image" property="og:image" content="https://www.nfstream.org/resources/preview.png">
     <div class="lp-center">
       <h1 style="font-weight: bold">NFStream: Flexible Network Data Analysis Framework</h1>
-      <h2 style="padding-bottom: 30px">NFStream is a multiplatform Python framework providing fast, flexible, and expressive data structures designed to make
-        working with online or offline network data easy and intuitive.</h2>
+      <h2 style="padding-bottom: 30px">a multiplatform Python framework providing fast, flexible, and expressive data structures designed to make working with online or offline network data easy and intuitive.</h2>
       <a href="https://mybinder.org/v2/gh/aouinizied/nfstream-tutorials/master?filepath=demo_notebook.ipynb" class="btn btn-blue fs-5 mb-3 mb-md-5 mr-5">Live Notebook</a>
       <a href="{{ site.baseurl }}/docs/" class="btn btn-blue fs-5 mb-3 mb-md-5">Get Started</a>
     </div>
@@ -52,7 +51,7 @@ offline_streamer = NFStreamer(source="tor.pcap",
 
 df = offline_streamer.to_pandas(columns_to_anonymize=())
 total_flows = offline_streamer.to_csv(flows_per_file=10000,
-                                      columns_to_anonymize=("src_ip"))
+                                      columns_to_anonymize=())
 
 {% endhighlight %}
       </div>
@@ -121,6 +120,7 @@ for flow in extended_streamer:
         <h3>Documentation</h3>
         <ul>
           <li><a href="{{ site.baseurl }}/docs/#installation-guide" class="lp-footer-item">Installation Guide</a></li>
+          <li><a href="{{ site.baseurl }}/docs/design" class="lp-footer-item">Design Overview</a></li>
           <li><a href="{{ site.baseurl }}/docs/api" class="lp-footer-item">API Documentation</a></li>
           <li><a href="{{ site.baseurl }}/docs/releases" class="lp-footer-item">Releases</a></li>
           <li><a href="{{ site.baseurl }}/docs/license" class="lp-footer-item">License</a></li>

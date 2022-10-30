@@ -7,22 +7,6 @@ nav_order: 4
 
 # APIs Documentation
 
-<img src="{{ site.baseurl }}/resources/architecture_nfstream.png" alt="drawing" width="730"/>
-
-The flow-based aggregation consists of aggregating packets into flows based on a shared set of characteristics 
-(flow key, e.g., source IP address, destination IP address, transport protocol, source port, destination port, 
-VLAN identifier, tunnel Identifier). A flow cache maintains each flow entry until its termination (e.g., active timeout, inactive timeout).
-While the entry is present in the flow cache, basic counters, and several metrics are updated. 
-If two pairs generate flows on both directions, the flow cache uses a bidirectional flow definition, adding counters 
-and metrics for both directions.
-
-In the above schema, NFStream overall architecture is depicted and could be summarized as follows:
-* NFStreamer: the driver process, it is responsible of setting the overall workflow which is mainly an orchestration of 
-parallel metering processes.
-* Meters: are the core parts of NFStream framework. Raw packets are processed (e.g. timestamped, decoded, truncated) 
-and dispatched across meters. Each meter is able to aggregate packet information into flow and compute required features 
-until flow expiration is triggered (active timeout, inactive timeout).
-
 ## Table of contents
 {: .no_toc .text-delta }
 
