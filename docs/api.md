@@ -271,7 +271,7 @@ When calling these entry points NFStream already matched the packet to its flow 
 information are exposed in an NFPacket (Network Flow Packet) which contains the following attributes:
 
 | `time` | `int`  | Packet timestamp in milliseconds. |
-| `delta_ime` | `int`  | Delta time in milliseconds with previous flow packet. |
+| `delta_time` | `int`  | Delta time in milliseconds with previous flow packet. |
 | `raw_size` | `int`  | Link layer packet size. |
 | `ip_size` | `int`  | IP packet size. |
 | `transport_size` | `int`  | Transport packet size. |
