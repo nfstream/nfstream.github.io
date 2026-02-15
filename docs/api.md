@@ -132,7 +132,7 @@ In the following we detail each implemented feature.
 | `application_is_guessed` | `int`  | Indicates if detection result is based on pure dissection or on a guess heuristics. |
 | `application_confidence` | `int`  | Indicates the underlying detection method (O: Unknown classification, 1: Classification obtained looking only at the L4 ports, 3: Classification results based on partial/incomplete DPI information, 4:  Classification results based on some LRU cache with partial/incomplete DPI information, 5: Classification results based on some LRU cache (i.e. correlation among sessions), 6: Deep packet inspection). |
 | `requested_server_name` | `str`  | Requested server name (SSL/TLS, DNS, HTTP). |
-| `client_fingerprint` | `str`  | Client fingerprint (DHCP fingerprint for DHCP, [JA3][ja3] for SSL/TLS and [HASSH][hassh] for SSH). |
+| `client_fingerprint` | `str`  | Client fingerprint (DHCP fingerprint for DHCP, [JA4][ja4] for SSL/TLS and [HASSH][hassh] for SSH). |
 | `server_fingerprint` | `str`  | Server fingerprint ([JA3][ja3] for SSL/TLS and [HASSH][hassh] for SSH). |
 | `user_agent` | `str`  | Extracted user agent for HTTP or User Agent Identifier for QUIC. |
 | `content_type` | `str`  | Extracted HTTP content type. |
@@ -420,5 +420,6 @@ for flow in ml_streamer:
 
 [bpf]: https://biot.com/capstats/bpf.html
 [ja3]: https://github.com/salesforce/ja3
+[ja4]: https://github.com/FoxIO-LLC/ja4
 [hassh]: https://github.com/salesforce/hassh
 [plg]: https://github.com/nfstream/nfstream/tree/master/nfstream/plugins
