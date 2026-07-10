@@ -287,6 +287,7 @@ information are exposed in an NFPacket (Network Flow Packet) which contains the 
 | `protocol` | `int`  | Transport layer protocol. |
 | `vlan_id` | `int`  | Virtual LAN identifier. |
 | `ip_version` | `int`  | IP version. |
+| `ip_tos` | `int`  | IP DS field byte (IPv4 ToS, IPv6 Traffic Class): DSCP and ECN markings. |
 | `ip_packet` | `bytes`  | Raw content starting from IP Header. |
 | `direction` | `int`  | Packet direction: 0 for src_to_dst and 1 for dst_to_src. |
 | `syn` | `bool`  | TCP SYN Flag present. |
